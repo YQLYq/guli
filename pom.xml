@@ -9,10 +9,10 @@
     <description>聚合服务</description>
     <packaging>pom</packaging>
     <modules>
-        <module>coupon</module>
-        <module>member</module>
-        <module>order</module>
-        <module>product</module>
-        <module>ware</module>
+        <module>guli-coupon</module>
+        <module>guli-member</module>
+        <module>guli-order</module>
+        <module>guli-product</module>
+        <module>guli-ware</module>
     </modules>
 </project>
