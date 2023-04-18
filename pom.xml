@@ -14,5 +14,7 @@
         <module>guli-order</module>
         <module>guli-product</module>
         <module>guli-ware</module>
+        <module>renren-security</module>
+        <module>guli-common</module>
     </modules>
 </project>
