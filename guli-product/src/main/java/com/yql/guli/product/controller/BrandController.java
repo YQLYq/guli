@@ -19,11 +19,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +69,7 @@ public class BrandController {
     @ApiOperation("保存")
     @LogOperation("保存")
     @RequiresPermissions("product:brand:save")
-    public Result save(@Valid @RequestBody BrandDTO dto) {
+    public Result save(@Validated(AddGroup.class) @RequestBody BrandDTO dto) {
 
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
@@ -85,7 +85,7 @@ public class BrandController {
     @ApiOperation("修改")
     @LogOperation("修改")
     @RequiresPermissions("product:brand:update")
-    public Result update(@RequestBody BrandDTO dto){
+    public Result update(@Validated(UpdateGroup.class) @RequestBody BrandDTO dto){
         //效验数据
         ValidatorUtils.validateEntity(dto, UpdateGroup.class, DefaultGroup.class);
 
