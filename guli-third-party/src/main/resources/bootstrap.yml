@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: guli-third-party
+  cloud:
+    nacos:
+      config:
+        server-addr: 8.130.114.255:8848
+        namespace: ba1054d5-5f43-402f-af83-8589745d85e3
+        extension-configs:
+          - data-id: oss.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+      discovery:
+        server-addr: 8.130.114.255:8848
