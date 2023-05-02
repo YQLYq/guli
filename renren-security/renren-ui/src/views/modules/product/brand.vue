@@ -182,12 +182,13 @@ export default {
   },
   methods: {
     switchChange(row) {
-      var brandId = []
-      brandId.push(row.brandId)
+      var brandId = row.brandId
+      var showStatus = row.showStatus
+      var name = row.name
       this.$axios({
         url: '/product/brand',
-        method: 'DELETE',
-        data: brandId,
+        method: 'put',
+        data: { brandId, showStatus, name },
       }).then(() => {
         this.$message({
           message: '修改显示状态成功',
