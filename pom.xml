@@ -16,5 +16,7 @@
         <module>guli-ware</module>
         <module>renren-security</module>
         <module>guli-common</module>
+        <module>guli-gateway</module>
+        <module>guli-third-party</module>
     </modules>
 </project>

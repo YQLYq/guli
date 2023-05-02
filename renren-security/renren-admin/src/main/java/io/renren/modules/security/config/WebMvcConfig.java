@@ -21,7 +21,6 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
@@ -31,14 +30,14 @@ import java.util.TimeZone;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOriginPatterns("*")
-            .allowCredentials(true)
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .maxAge(3600);
-    }
+    // @Override
+    // public void addCorsMappings(CorsRegistry registry) {
+    //     registry.addMapping("/**")
+    //         .allowedOriginPatterns("*")
+    //         .allowCredentials(true)
+    //         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+    //         .maxAge(3600);
+    // }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

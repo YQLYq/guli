@@ -9,6 +9,7 @@ import com.yql.guli.product.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +32,15 @@ public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEn
     }
 
 
+    @Override
+    public List<CategoryEntity> listWithTree() {
+        List<CategoryEntity> entityList = baseDao.selectList(null);
+        return  entityList;
+    }
+
+    @Override
+    public void deleteMenuById(List<Long> ids) {
+        //TODO 1.检查 有没有被引用
+        baseDao.deleteBatchIds(ids);
+    }
 }

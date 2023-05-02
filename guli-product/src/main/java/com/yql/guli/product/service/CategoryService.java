@@ -4,6 +4,8 @@ import com.yql.guli.common.service.CrudService;
 import com.yql.guli.product.dto.CategoryDTO;
 import com.yql.guli.product.entity.CategoryEntity;
 
+import java.util.List;
+
 
 /**
  * 商品三级分类
@@ -13,4 +15,7 @@ import com.yql.guli.product.entity.CategoryEntity;
  */
 public interface CategoryService extends CrudService<CategoryEntity, CategoryDTO> {
 
+    List<CategoryEntity> listWithTree();
+
+    void deleteMenuById(List<Long> ids);
 }

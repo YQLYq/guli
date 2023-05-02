@@ -7,7 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ProductApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void testConfig(){
+
     }
+
+
+
+
+
 
 }

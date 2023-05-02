@@ -4,6 +4,7 @@ import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -11,7 +12,9 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.member.dto.MemberDTO;
+import com.yql.guli.member.entity.MemberEntity;
 import com.yql.guli.member.excel.MemberExcel;
+import com.yql.guli.member.feign.CouponFeignService;
 import com.yql.guli.member.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +43,15 @@ import java.util.Map;
 public class MemberController {
     @Autowired
     private MemberService memberService;
-
+    @Resource
+    private CouponFeignService couponFeignService;
+    @RequestMapping("/coupons")
+    public R test(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("zs");
+        R r = couponFeignService.memberCoupon();
+        return  R.ok().put("member",memberEntity).put("coupons", r.get("coupons"));
+    }
     @GetMapping("page")
     @ApiOperation("分页")
     @ApiImplicitParams({

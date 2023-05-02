@@ -45,6 +45,11 @@ public class Result<T> implements Serializable {
         return this;
     }
 
+    public Result<T> error(T data) {
+        this.code = 400;
+        this.setData(data);
+        return this;
+    }
     public boolean success(){
         return code == 0;
     }
@@ -95,5 +100,11 @@ public class Result<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+
+    public Result<T> put(T value) {
+        this.data = value;
+        return this;
     }
 }

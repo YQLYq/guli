@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: renren-admin
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      discovery:
+        server-addr: 8.130.114.255:8848
+      config:
+        server-addr: 8.130.114.255:8848

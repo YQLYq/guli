@@ -46,7 +46,7 @@ public class SwaggerConfig{
             //加了ApiOperation注解的类，生成接口文档
             .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
             //包下的类，生成接口文档
-            //.apis(RequestHandlerSelectors.basePackage("io.renren.modules.job.controller"))
+            .apis(RequestHandlerSelectors.basePackage("com.yql.guli"))
             .paths(PathSelectors.any())
             .build()
             .extensions(openApiExtensionResolver.buildExtensions("Renren"))
@@ -58,7 +58,7 @@ public class SwaggerConfig{
         return new ApiInfoBuilder()
             .title("人人开源")
             .description("renren-admin文档")
-            .termsOfServiceUrl("https://localhost:8080/")
+            .termsOfServiceUrl("https://localhost:66/")
             .version("5.x")
             .build();
     }
