@@ -101,7 +101,7 @@ export default {
     addOrUpdateHandle (id) {
       this.addOrUpdateVisible = true
       this.$nextTick(() => {
-        this.$refs.addOrUpdate.dataForm.brandId = id
+        this.$refs.addOrUpdate.dataForm.id = id
         this.$refs.addOrUpdate.init()
       })
     },

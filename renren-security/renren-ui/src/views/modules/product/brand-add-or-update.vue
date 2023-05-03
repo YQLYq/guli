@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="visible"
-    :title="!dataForm.brandId ? $t('add') : $t('update')"
+    :title="!dataForm.id ? $t('add') : $t('update')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
@@ -59,7 +59,7 @@ export default {
     return {
       visible: false,
       dataForm: {
-        brandId: '',
+        id: '',
         name: '',
         logo: '',
         descript: '',
@@ -141,7 +141,7 @@ export default {
       this.visible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-        if (this.dataForm.brandId) {
+        if (this.dataForm.id) {
           this.getInfo()
         }
       })
@@ -149,7 +149,7 @@ export default {
     // 获取信息
     getInfo() {
       this.$http
-        .get(`/product/brand/${this.dataForm.brandId}`)
+        .get(`/product/brand/${this.dataForm.id}`)
         .then(({ data: res }) => {
           if (res.code !== 0) {
             return this.$message.error(res.msg)
@@ -168,7 +168,7 @@ export default {
           if (!valid) {
             return false
           }
-          this.$http[!this.dataForm.brandId ? 'post' : 'put'](
+          this.$http[!this.dataForm.id ? 'post' : 'put'](
             '/product/brand/',
             this.dataForm
           )

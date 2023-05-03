@@ -40,7 +40,7 @@ public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
 
-    @GetMapping("page")
+    @GetMapping("page/{catelogId}")
     @ApiOperation("分页")
     @ApiImplicitParams({
         @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType="int") ,
@@ -49,9 +49,8 @@ public class AttrGroupController {
         @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType="String")
     })
     @RequiresPermissions("product:attrgroup:page")
-    public Result<PageData<AttrGroupDTO>> page(@ApiIgnore @RequestParam Map<String, Object> params){
-        PageData<AttrGroupDTO> page = attrGroupService.page(params);
-
+    public Result<PageData<AttrGroupDTO>> page(@ApiIgnore @RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId){
+        PageData<AttrGroupDTO> page = attrGroupService.page(params, catelogId);
         return new Result<PageData<AttrGroupDTO>>().ok(page);
     }
 
