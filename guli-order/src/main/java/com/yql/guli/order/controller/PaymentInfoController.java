@@ -72,7 +72,7 @@ public class PaymentInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        paymentInfoService.save(dto);
+        paymentInfoService.saveDto(dto);
 
         return new Result();
     }

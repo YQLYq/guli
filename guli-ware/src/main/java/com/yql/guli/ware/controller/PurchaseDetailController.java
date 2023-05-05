@@ -72,7 +72,7 @@ public class PurchaseDetailController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        purchaseDetailService.save(dto);
+        purchaseDetailService.saveDto(dto);
 
         return new Result();
     }

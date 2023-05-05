@@ -72,7 +72,7 @@ public class IntegrationChangeHistoryController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        integrationChangeHistoryService.save(dto);
+        integrationChangeHistoryService.saveDto(dto);
 
         return new Result();
     }

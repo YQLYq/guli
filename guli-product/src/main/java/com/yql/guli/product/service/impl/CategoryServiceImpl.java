@@ -9,6 +9,8 @@ import com.yql.guli.product.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,5 +44,27 @@ public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEn
     public void deleteMenuById(List<Long> ids) {
         //TODO 1.检查 有没有被引用
         baseDao.deleteBatchIds(ids);
+    }
+    //查询id路径
+    @Override
+    public Long[] findCateLogIds(Long catelogId) {
+        ArrayList<Long>  list = new ArrayList<>();
+        getCatPathId(list,catelogId);
+        // 翻转 ArrayList 中所有元素的顺序
+        Collections.reverse(list);
+        // 将 ArrayList 转换成数组
+        Long[] ids = list.toArray(new Long[0]);
+        return ids;
+    }
+    //查询父节点添加到list
+    private void getCatPathId(ArrayList<Long> list, Long catelogId) {
+        //查询entity
+        CategoryEntity categoryEntity = baseDao.selectById(catelogId);
+        list.add(catelogId);
+        while (categoryEntity.getParentCid() != 0) {
+            Long parentId = categoryEntity.getParentCid();
+            list.add(parentId);
+            categoryEntity = baseDao.selectById(parentId);
+        }
     }
 }

@@ -72,7 +72,7 @@ public class CommentReplayController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        commentReplayService.save(dto);
+        commentReplayService.saveDto(dto);
 
         return new Result();
     }

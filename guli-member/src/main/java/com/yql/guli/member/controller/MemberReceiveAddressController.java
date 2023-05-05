@@ -72,7 +72,7 @@ public class MemberReceiveAddressController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberReceiveAddressService.save(dto);
+        memberReceiveAddressService.saveDto(dto);
 
         return new Result();
     }

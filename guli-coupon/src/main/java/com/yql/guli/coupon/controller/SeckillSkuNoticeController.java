@@ -72,7 +72,7 @@ public class SeckillSkuNoticeController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        seckillSkuNoticeService.save(dto);
+        seckillSkuNoticeService.saveDto(dto);
 
         return new Result();
     }

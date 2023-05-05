@@ -72,7 +72,7 @@ public class SkuSaleAttrValueController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        skuSaleAttrValueService.save(dto);
+        skuSaleAttrValueService.saveDto(dto);
 
         return new Result();
     }

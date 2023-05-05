@@ -72,7 +72,7 @@ public class ProductAttrValueController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        productAttrValueService.save(dto);
+        productAttrValueService.saveDto(dto);
 
         return new Result();
     }

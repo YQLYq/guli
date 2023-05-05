@@ -72,7 +72,7 @@ public class MemberLoginLogController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberLoginLogService.save(dto);
+        memberLoginLogService.saveDto(dto);
 
         return new Result();
     }

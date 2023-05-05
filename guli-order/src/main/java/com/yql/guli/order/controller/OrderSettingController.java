@@ -72,7 +72,7 @@ public class OrderSettingController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        orderSettingService.save(dto);
+        orderSettingService.saveDto(dto);
 
         return new Result();
     }

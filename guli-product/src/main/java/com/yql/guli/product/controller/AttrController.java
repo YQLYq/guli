@@ -72,7 +72,7 @@ public class AttrController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        attrService.save(dto);
+        attrService.saveDto(dto);
 
         return new Result();
     }

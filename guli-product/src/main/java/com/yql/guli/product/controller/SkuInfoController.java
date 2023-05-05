@@ -72,7 +72,7 @@ public class SkuInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        skuInfoService.save(dto);
+        skuInfoService.saveDto(dto);
 
         return new Result();
     }

@@ -18,4 +18,6 @@ public interface CategoryService extends CrudService<CategoryEntity, CategoryDTO
     List<CategoryEntity> listWithTree();
 
     void deleteMenuById(List<Long> ids);
+
+    Long[] findCateLogIds(Long catelogId);
 }

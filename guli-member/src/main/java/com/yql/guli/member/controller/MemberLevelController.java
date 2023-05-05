@@ -72,7 +72,7 @@ public class MemberLevelController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberLevelService.save(dto);
+        memberLevelService.saveDto(dto);
 
         return new Result();
     }

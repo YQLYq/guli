@@ -72,7 +72,7 @@ public class CouponSpuRelationController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        couponSpuRelationService.save(dto);
+        couponSpuRelationService.saveDto(dto);
 
         return new Result();
     }

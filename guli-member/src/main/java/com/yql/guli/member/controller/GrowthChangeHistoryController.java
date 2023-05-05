@@ -72,7 +72,7 @@ public class GrowthChangeHistoryController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        growthChangeHistoryService.save(dto);
+        growthChangeHistoryService.saveDto(dto);
 
         return new Result();
     }

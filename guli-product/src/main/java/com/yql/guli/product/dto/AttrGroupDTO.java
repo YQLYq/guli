@@ -36,5 +36,5 @@ public class AttrGroupDTO implements Serializable {
 	@ApiModelProperty(value = "所属分类id")
 	private Long catelogId;
 
-
+	private Long[] catelogIds;
 }

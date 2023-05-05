@@ -72,7 +72,7 @@ public class SeckillPromotionController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        seckillPromotionService.save(dto);
+        seckillPromotionService.saveDto(dto);
 
         return new Result();
     }

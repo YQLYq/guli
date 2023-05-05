@@ -72,7 +72,7 @@ public class OrderReturnApplyController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        orderReturnApplyService.save(dto);
+        orderReturnApplyService.saveDto(dto);
 
         return new Result();
     }

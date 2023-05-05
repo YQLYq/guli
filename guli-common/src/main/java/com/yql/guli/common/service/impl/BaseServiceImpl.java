@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
@@ -26,9 +27,9 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -40,8 +41,8 @@ import java.util.function.BiConsumer;
  *
  * @author Mark sunlightcs@gmail.com
  */
-public abstract class BaseServiceImpl<M extends BaseMapper<T>, T>  implements BaseService<T> {
-    @Autowired
+public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements BaseService<T> {
+    @Resource
     protected M baseDao;
     protected Log log = LogFactory.getLog(getClass());
 
@@ -129,7 +130,7 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T>  implements Ba
      * @param result 数据库操作返回影响条数
      * @return boolean
      */
-    protected static boolean retBool(Integer result) {
+    protected static boolean myRetBool(Integer result) {
         return SqlHelper.retBool(result);
     }
 
@@ -148,7 +149,7 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T>  implements Ba
 
     @Override
     public boolean insert(T entity) {
-        return BaseServiceImpl.retBool(baseDao.insert(entity));
+        return BaseServiceImpl.myRetBool(baseDao.insert(entity));
     }
 
     @Override
@@ -177,12 +178,12 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T>  implements Ba
 
     @Override
     public boolean updateById(T entity) {
-        return BaseServiceImpl.retBool(baseDao.updateById(entity));
+        return BaseServiceImpl.myRetBool(baseDao.updateById(entity));
     }
 
     @Override
     public boolean update(T entity, Wrapper<T> updateWrapper) {
-        return BaseServiceImpl.retBool(baseDao.update(entity, updateWrapper));
+        return BaseServiceImpl.myRetBool(baseDao.update(entity, updateWrapper));
     }
 
     @Override

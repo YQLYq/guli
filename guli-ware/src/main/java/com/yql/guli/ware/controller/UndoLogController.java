@@ -72,7 +72,7 @@ public class UndoLogController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        undoLogService.save(dto);
+        undoLogService.saveDto(dto);
 
         return new Result();
     }

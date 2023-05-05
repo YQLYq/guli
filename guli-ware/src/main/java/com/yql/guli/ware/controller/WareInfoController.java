@@ -72,7 +72,7 @@ public class WareInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        wareInfoService.save(dto);
+        wareInfoService.saveDto(dto);
 
         return new Result();
     }

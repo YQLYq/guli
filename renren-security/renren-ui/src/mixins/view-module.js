@@ -119,7 +119,7 @@ export default {
     },
     // 删除
     deleteHandle (id) {
-      if (this.mixinViewModuleOptions.deleteIsBatch && !id && this.dataListSelections.length <= 0) {
+       if (this.mixinViewModuleOptions.deleteIsBatch && !id && this.dataListSelections.length <= 0) {
         return this.$message({
           message: this.$t('prompt.deleteBatch'),
           type: 'warning',

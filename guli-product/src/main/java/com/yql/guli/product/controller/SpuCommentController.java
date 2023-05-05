@@ -72,7 +72,7 @@ public class SpuCommentController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        spuCommentService.save(dto);
+        spuCommentService.saveDto(dto);
 
         return new Result();
     }

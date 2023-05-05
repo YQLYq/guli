@@ -72,7 +72,7 @@ public class AttrAttrgroupRelationController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        attrAttrgroupRelationService.save(dto);
+        attrAttrgroupRelationService.saveDto(dto);
 
         return new Result();
     }

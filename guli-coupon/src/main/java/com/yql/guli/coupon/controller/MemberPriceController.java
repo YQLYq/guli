@@ -72,7 +72,7 @@ public class MemberPriceController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberPriceService.save(dto);
+        memberPriceService.saveDto(dto);
 
         return new Result();
     }

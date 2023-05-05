@@ -72,7 +72,7 @@ public class MemberCollectSpuController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberCollectSpuService.save(dto);
+        memberCollectSpuService.saveDto(dto);
 
         return new Result();
     }

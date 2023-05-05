@@ -72,7 +72,7 @@ public class MemberCollectSubjectController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberCollectSubjectService.save(dto);
+        memberCollectSubjectService.saveDto(dto);
 
         return new Result();
     }

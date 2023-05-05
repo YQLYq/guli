@@ -72,7 +72,7 @@ public class SpuBoundsController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        spuBoundsService.save(dto);
+        spuBoundsService.saveDto(dto);
 
         return new Result();
     }

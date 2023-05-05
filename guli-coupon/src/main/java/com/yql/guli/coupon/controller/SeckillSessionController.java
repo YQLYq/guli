@@ -72,7 +72,7 @@ public class SeckillSessionController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        seckillSessionService.save(dto);
+        seckillSessionService.saveDto(dto);
 
         return new Result();
     }

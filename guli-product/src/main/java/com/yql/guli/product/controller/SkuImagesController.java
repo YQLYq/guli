@@ -72,7 +72,7 @@ public class SkuImagesController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        skuImagesService.save(dto);
+        skuImagesService.saveDto(dto);
 
         return new Result();
     }

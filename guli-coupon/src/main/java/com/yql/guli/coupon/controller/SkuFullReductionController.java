@@ -72,7 +72,7 @@ public class SkuFullReductionController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        skuFullReductionService.save(dto);
+        skuFullReductionService.saveDto(dto);
 
         return new Result();
     }

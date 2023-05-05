@@ -45,5 +45,4 @@ public class CategoryDTO implements Serializable {
 	@ApiModelProperty(value = "商品数量")
 	private Integer productCount;
 
-
 }

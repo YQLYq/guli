@@ -72,7 +72,7 @@ public class OrderOperateHistoryController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        orderOperateHistoryService.save(dto);
+        orderOperateHistoryService.saveDto(dto);
 
         return new Result();
     }

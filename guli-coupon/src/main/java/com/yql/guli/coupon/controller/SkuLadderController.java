@@ -72,7 +72,7 @@ public class SkuLadderController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        skuLadderService.save(dto);
+        skuLadderService.saveDto(dto);
 
         return new Result();
     }

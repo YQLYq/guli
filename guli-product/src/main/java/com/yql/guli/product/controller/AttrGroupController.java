@@ -13,6 +13,7 @@ import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.product.dto.AttrGroupDTO;
 import com.yql.guli.product.excel.AttrGroupExcel;
 import com.yql.guli.product.service.AttrGroupService;
+import com.yql.guli.product.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,21 @@ import java.util.Map;
 public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
+    @Autowired
+    private CategoryService categoryService;
+    @GetMapping("page")
+    @ApiOperation("分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.LIMIT, value = "每页显示记录数", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.ORDER_FIELD, value = "排序字段", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType = "String")
+    })
+    @RequiresPermissions("product:attrgroup:page")
+    public Result<PageData<AttrGroupDTO>> page(@ApiIgnore @RequestParam Map<String, Object> params) {
+        PageData<AttrGroupDTO> page = attrGroupService.page(params);
+        return new Result<PageData<AttrGroupDTO>>().ok(page);
+    }
 
     @GetMapping("page/{catelogId}")
     @ApiOperation("分页")
@@ -49,8 +65,10 @@ public class AttrGroupController {
         @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType="String")
     })
     @RequiresPermissions("product:attrgroup:page")
-    public Result<PageData<AttrGroupDTO>> page(@ApiIgnore @RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId){
+    public Result<PageData<AttrGroupDTO>> pageKey(@ApiIgnore @RequestParam Map<String, Object> params,@PathVariable("catelogId") Long catelogId){
         PageData<AttrGroupDTO> page = attrGroupService.page(params, catelogId);
+
+
         return new Result<PageData<AttrGroupDTO>>().ok(page);
     }
 
@@ -59,7 +77,9 @@ public class AttrGroupController {
     @RequiresPermissions("product:attrgroup:info")
     public Result<AttrGroupDTO> get(@PathVariable("id") Long id){
         AttrGroupDTO data = attrGroupService.get(id);
-
+        Long catelogId = data.getCatelogId();
+        Long[] cateLogIds = categoryService.findCateLogIds(catelogId);
+        data.setCatelogIds(cateLogIds);
         return new Result<AttrGroupDTO>().ok(data);
     }
 
@@ -71,7 +91,7 @@ public class AttrGroupController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        attrGroupService.save(dto);
+        attrGroupService.saveDto(dto);
 
         return new Result();
     }

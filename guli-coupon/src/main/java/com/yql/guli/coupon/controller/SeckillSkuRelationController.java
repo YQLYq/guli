@@ -72,7 +72,7 @@ public class SeckillSkuRelationController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        seckillSkuRelationService.save(dto);
+        seckillSkuRelationService.saveDto(dto);
 
         return new Result();
     }

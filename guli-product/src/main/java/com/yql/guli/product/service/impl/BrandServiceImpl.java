@@ -1,6 +1,9 @@
 package com.yql.guli.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yql.guli.common.page.PageData;
 import com.yql.guli.common.service.impl.CrudServiceImpl;
 import com.yql.guli.product.dao.BrandDao;
 import com.yql.guli.product.dto.BrandDTO;
@@ -30,5 +33,29 @@ public class BrandServiceImpl extends CrudServiceImpl<BrandDao, BrandEntity, Bra
         return wrapper;
     }
 
+
+    public LambdaQueryWrapper<BrandEntity> getWrapper(Object key) {
+        LambdaQueryWrapper<BrandEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(BrandEntity::getBrandId,key).or().like(BrandEntity::getName,key);
+
+        return wrapper;
+    }
+
+    @Override
+    public PageData<BrandDTO> page(Map<String, Object> params) {
+        Object key = params.get("key");
+        if (key == null) {
+            PageData<BrandDTO> page = super.page(params);
+            return page;
+        } else {
+            IPage<BrandEntity> attrGroupEntityIPage = baseDao.selectPage(
+                    getPage(params, null, false),
+                    getWrapper(key)
+
+            );
+            return getPageData(attrGroupEntityIPage, currentDtoClass());
+        }
+
+    }
 
 }

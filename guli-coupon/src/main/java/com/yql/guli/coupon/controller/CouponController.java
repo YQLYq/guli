@@ -96,7 +96,7 @@ public class CouponController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        couponService.save(dto);
+        couponService.saveDto(dto);
 
         return new Result();
     }

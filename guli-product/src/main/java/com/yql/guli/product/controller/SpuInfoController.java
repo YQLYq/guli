@@ -72,7 +72,7 @@ public class SpuInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        spuInfoService.save(dto);
+        spuInfoService.saveDto(dto);
 
         return new Result();
     }

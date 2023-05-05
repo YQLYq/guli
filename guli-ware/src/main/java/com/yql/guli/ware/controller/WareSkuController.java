@@ -72,7 +72,7 @@ public class WareSkuController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        wareSkuService.save(dto);
+        wareSkuService.saveDto(dto);
 
         return new Result();
     }

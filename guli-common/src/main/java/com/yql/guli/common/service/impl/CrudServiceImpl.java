@@ -59,7 +59,7 @@ public abstract class CrudServiceImpl<M extends BaseMapper<T>, T, D> extends Bas
     }
 
     @Override
-    public void save(D dto) {
+    public void saveDto(D dto) {
         T entity = ConvertUtils.sourceToTarget(dto, currentModelClass());
         insert(entity);
 

@@ -72,7 +72,7 @@ public class OrderItemController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        orderItemService.save(dto);
+        orderItemService.saveDto(dto);
 
         return new Result();
     }

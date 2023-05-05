@@ -72,7 +72,7 @@ public class WareOrderTaskDetailController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        wareOrderTaskDetailService.save(dto);
+        wareOrderTaskDetailService.saveDto(dto);
 
         return new Result();
     }

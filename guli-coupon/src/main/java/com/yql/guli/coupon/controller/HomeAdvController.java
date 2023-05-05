@@ -72,7 +72,7 @@ public class HomeAdvController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        homeAdvService.save(dto);
+        homeAdvService.saveDto(dto);
 
         return new Result();
     }

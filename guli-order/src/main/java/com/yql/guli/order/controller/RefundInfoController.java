@@ -72,7 +72,7 @@ public class RefundInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        refundInfoService.save(dto);
+        refundInfoService.saveDto(dto);
 
         return new Result();
     }

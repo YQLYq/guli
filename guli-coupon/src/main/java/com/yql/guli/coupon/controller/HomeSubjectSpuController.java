@@ -72,7 +72,7 @@ public class HomeSubjectSpuController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        homeSubjectSpuService.save(dto);
+        homeSubjectSpuService.saveDto(dto);
 
         return new Result();
     }

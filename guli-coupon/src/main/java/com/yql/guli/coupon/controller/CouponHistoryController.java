@@ -72,7 +72,7 @@ public class CouponHistoryController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        couponHistoryService.save(dto);
+        couponHistoryService.saveDto(dto);
 
         return new Result();
     }

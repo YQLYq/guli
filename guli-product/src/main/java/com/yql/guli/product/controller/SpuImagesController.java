@@ -72,7 +72,7 @@ public class SpuImagesController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        spuImagesService.save(dto);
+        spuImagesService.saveDto(dto);
 
         return new Result();
     }

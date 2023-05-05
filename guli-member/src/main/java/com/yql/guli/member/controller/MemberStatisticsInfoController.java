@@ -72,7 +72,7 @@ public class MemberStatisticsInfoController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberStatisticsInfoService.save(dto);
+        memberStatisticsInfoService.saveDto(dto);
 
         return new Result();
     }

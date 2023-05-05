@@ -84,7 +84,7 @@ public class MemberController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        memberService.save(dto);
+        memberService.saveDto(dto);
 
         return new Result();
     }

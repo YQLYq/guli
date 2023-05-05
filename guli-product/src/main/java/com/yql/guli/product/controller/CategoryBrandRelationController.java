@@ -1,9 +1,11 @@
 package com.yql.guli.product.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -11,6 +13,7 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.product.dto.CategoryBrandRelationDTO;
+import com.yql.guli.product.entity.CategoryBrandRelationEntity;
 import com.yql.guli.product.excel.CategoryBrandRelationExcel;
 import com.yql.guli.product.service.CategoryBrandRelationService;
 import io.swagger.annotations.Api;
@@ -39,6 +42,21 @@ import java.util.Map;
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    @GetMapping("/list")
+    @ApiOperation("获取品牌关联的分类")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.LIMIT, value = "每页显示记录数", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.ORDER_FIELD, value = "排序字段", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType = "String")
+    })
+    @RequiresPermissions("product:categorybrandrelation:page")
+    public R catelogList(@ApiIgnore @RequestParam("brandId") Long brandId) {
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(new LambdaQueryWrapper<CategoryBrandRelationEntity>().eq(CategoryBrandRelationEntity::getBrandId, brandId));
+        return R.ok().put("data",data);
+    }
+
 
     @GetMapping("page")
     @ApiOperation("分页")
@@ -72,7 +90,20 @@ public class CategoryBrandRelationController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        categoryBrandRelationService.save(dto);
+        categoryBrandRelationService.saveDto(dto);
+
+        return new Result();
+    }
+
+    @PostMapping("/save")
+    @ApiOperation("保存")
+    @LogOperation("保存")
+    @RequiresPermissions("product:categorybrandrelation:save")
+    public Result saveId(@RequestBody CategoryBrandRelationDTO dto) {
+        //效验数据
+        ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
+
+        categoryBrandRelationService.saveDto(dto);
 
         return new Result();
     }
