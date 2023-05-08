@@ -2,11 +2,14 @@ package com.yql.guli.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yql.guli.common.service.impl.CrudServiceImpl;
+import com.yql.guli.product.dao.CategoryBrandRelationDao;
 import com.yql.guli.product.dao.CategoryDao;
 import com.yql.guli.product.dto.CategoryDTO;
 import com.yql.guli.product.entity.CategoryEntity;
 import com.yql.guli.product.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +26,13 @@ import java.util.Map;
 @Service
 public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEntity, CategoryDTO> implements CategoryService {
 
+    private CategoryBrandRelationDao categoryBrandRelationDao;
+
+    @Autowired
+    public CategoryServiceImpl(CategoryBrandRelationDao categoryBrandRelationDao) {
+        this.categoryBrandRelationDao = categoryBrandRelationDao;
+    }
+
     @Override
     public QueryWrapper<CategoryEntity> getWrapper(Map<String, Object> params){
         String id = (String)params.get("id");
@@ -36,8 +46,7 @@ public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEn
 
     @Override
     public List<CategoryEntity> listWithTree() {
-        List<CategoryEntity> entityList = baseDao.selectList(null);
-        return  entityList;
+        return baseDao.selectList(null);
     }
 
     @Override
@@ -45,7 +54,7 @@ public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEn
         //TODO 1.检查 有没有被引用
         baseDao.deleteBatchIds(ids);
     }
-    //查询id路径
+    /**查询id路径*/
     @Override
     public Long[] findCateLogIds(Long catelogId) {
         ArrayList<Long>  list = new ArrayList<>();
@@ -53,11 +62,23 @@ public class CategoryServiceImpl extends CrudServiceImpl<CategoryDao, CategoryEn
         // 翻转 ArrayList 中所有元素的顺序
         Collections.reverse(list);
         // 将 ArrayList 转换成数组
-        Long[] ids = list.toArray(new Long[0]);
-        return ids;
+        return list.toArray(new Long[0]);
     }
-    //查询父节点添加到list
-    private void getCatPathId(ArrayList<Long> list, Long catelogId) {
+    /**
+     * 级联更新所有关联的数据
+     * @author yql
+     * @date 14:43 2023/5/5
+     * @param dto
+     * @return void
+     **/
+    @Override
+    public void updateCascade(CategoryDTO dto) {
+        this.update(dto);
+        categoryBrandRelationDao.updateCatelogNameAndCatelogId(dto.getName(),dto.getCatId());
+    }
+
+    /**查询父节点添加到list*/
+    private void getCatPathId(@NotNull ArrayList<Long> list, Long catelogId) {
         //查询entity
         CategoryEntity categoryEntity = baseDao.selectById(catelogId);
         list.add(catelogId);

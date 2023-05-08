@@ -37,7 +37,7 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
      * 查询关键
      * @author yql
      * @date 19:54 2023/5/3
-     * @param
+     * @param params catelogId
      * @return com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.yql.guli.product.entity.AttrGroupEntity>
      **/
     public LambdaQueryWrapper<AttrGroupEntity> getWrapper(Map<String, Object> params, Long catelogId) {
@@ -46,9 +46,7 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
         LambdaQueryWrapper<AttrGroupEntity> wrapper= new LambdaQueryWrapper<>();
         wrapper.eq(AttrGroupEntity::getCatelogId,catelogId);
         if(!StringUtils.isEmpty(key)){
-            wrapper.and((obj)->{
-                obj.eq(AttrGroupEntity::getAttrGroupId,key).or().like(AttrGroupEntity::getAttrGroupName,key);
-            });
+            wrapper.and(obj-> obj.eq(AttrGroupEntity::getAttrGroupId,key).or().like(AttrGroupEntity::getAttrGroupName,key));
             return  wrapper;
         }
 
@@ -60,14 +58,13 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
     public PageData<AttrGroupDTO> page(Map<String, Object> params, Long catelogId) {
 
         if(catelogId == 0){
-            PageData<AttrGroupDTO> page = this.page(params);
-            return page;
+            return this.page(params);
         }else {
-            IPage<AttrGroupEntity> attrGroupEntityIPage = baseDao.selectPage(
+            IPage<AttrGroupEntity> attrGroupEntityPage = baseDao.selectPage(
                     getPage(params, null, false),
                     this.getWrapper(params,catelogId)
             );
-            return getPageData(attrGroupEntityIPage, currentDtoClass());
+            return getPageData(attrGroupEntityPage, currentDtoClass());
         }
 
     }

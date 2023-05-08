@@ -157,7 +157,7 @@
         ref="addOrUpdate"
         @refreshDataList="getDataList"
       ></add-or-update>
-      <el-dialog title="关联分类" :visible.sync="cateRelationDialogVisible" width="30%">
+      <el-dialog title="关联分类" :visible.sync="cateRelationDialogVisible" width="30%" @closed="close">
       <el-popover placement="right-end" v-model="popCatelogSelectVisible">
         <category-cascader :catelogPath.sync="catelogPath"></category-cascader>
         <div style="text-align: right; margin: 0">
@@ -225,6 +225,9 @@ export default {
     }
   },
   methods: {
+    close () {
+      this.catelogPath = []
+    },
     updateCatelogHandle(brandId) {
       this.cateRelationDialogVisible = true;
       this.brandId = brandId;
@@ -250,7 +253,7 @@ export default {
       //{"brandId":1,"catelogId":2}
       this.popCatelogSelectVisible =false;
       this.$axios({
-        url: "/product/categorybrandrelation",
+        url: "/product/categorybrandrelation/save",
         method: "post",
         data: {brandId:this.brandId,catelogId:this.catelogPath[this.catelogPath.length-1]}
       }).then(({ data }) => {
@@ -268,13 +271,13 @@ export default {
     },
     getCateRelation() {
       this.$axios({
-        url: "/product/categorybrandrelation/page",
+        url: "/product/categorybrandrelation/list",
         method: "get",
         params: {
           brandId: this.brandId
         }
       }).then(({ data }) => {
-        this.cateRelationTableData = data.data.list;
+        this.cateRelationTableData = data.data;
       });
     },
     // 获取数据列表
@@ -290,8 +293,8 @@ export default {
         }
       }).then(({ data }) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
+          this.dataList = data.data.list;
+          this.totalPage = data.data.total;
         } else {
           this.dataList = [];
           this.totalPage = 0;

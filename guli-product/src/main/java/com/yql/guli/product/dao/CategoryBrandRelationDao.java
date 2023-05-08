@@ -1,4 +1,5 @@
 package com.yql.guli.product.dao;
+import org.apache.ibatis.annotations.Param;
 
 import com.yql.guli.common.dao.BaseDao;
 import com.yql.guli.product.entity.CategoryBrandRelationEntity;
@@ -12,5 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CategoryBrandRelationDao extends BaseDao<CategoryBrandRelationEntity> {
-	
+    int updateBrandNameByBrandId(@Param("brandName") String brandName, @Param("brandId") Long brandId);
+
+    int updateCatelogNameAndCatelogId(@Param("catelogName") String catelogName, @Param("catelogId") Long catelogId);
 }

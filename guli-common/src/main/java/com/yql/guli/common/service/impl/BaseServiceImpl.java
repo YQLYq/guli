@@ -27,9 +27,9 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.function.BiConsumer;
  * @author Mark sunlightcs@gmail.com
  */
 public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements BaseService<T> {
-    @Resource
+    @Autowired
     protected M baseDao;
     protected Log log = LogFactory.getLog(getClass());
 

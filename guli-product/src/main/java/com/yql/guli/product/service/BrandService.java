@@ -13,4 +13,5 @@ import com.yql.guli.product.entity.BrandEntity;
  */
 public interface BrandService extends CrudService<BrandEntity, BrandDTO> {
 
+    void updateDetail(BrandDTO dto);
 }

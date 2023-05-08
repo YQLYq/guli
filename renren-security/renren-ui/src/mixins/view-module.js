@@ -102,7 +102,7 @@ export default {
       this.addOrUpdateVisible = true
       this.$nextTick(() => {
         this.$refs.addOrUpdate.dataForm.id = id
-        this.$refs.addOrUpdate.init()
+        this.$refs.addOrUpdate.init(id)
       })
     },
     // 关闭当前窗口

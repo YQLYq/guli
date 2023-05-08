@@ -30,6 +30,8 @@ public interface CrudService<T, D> extends BaseService<T> {
 
     void update(D dto);
 
+
+
     void delete(Long[] ids);
 
 }

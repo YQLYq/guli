@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yql.guli.common.page.PageData;
 import com.yql.guli.common.service.impl.CrudServiceImpl;
 import com.yql.guli.product.dao.BrandDao;
+import com.yql.guli.product.dao.CategoryBrandRelationDao;
 import com.yql.guli.product.dto.BrandDTO;
 import com.yql.guli.product.entity.BrandEntity;
 import com.yql.guli.product.service.BrandService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -21,8 +24,10 @@ import java.util.Map;
  * @since 1.0.0 2023-04-18
  */
 @Service
+@Transactional
 public class BrandServiceImpl extends CrudServiceImpl<BrandDao, BrandEntity, BrandDTO> implements BrandService {
-
+    @Autowired
+    CategoryBrandRelationDao categoryBrandRelationDao;
     @Override
     public QueryWrapper<BrandEntity> getWrapper(Map<String, Object> params){
         String id = (String)params.get("id");
@@ -58,4 +63,15 @@ public class BrandServiceImpl extends CrudServiceImpl<BrandDao, BrandEntity, Bra
 
     }
 
+
+
+
+    @Override
+    public void updateDetail(BrandDTO dto) {
+        //TODO 存在其他表需要一起更新
+        this.update(dto);
+        if (!StringUtils.isEmpty(dto.getName())){
+            categoryBrandRelationDao.updateBrandNameByBrandId(dto.getName(), dto.getBrandId());
+        }
+    }
 }

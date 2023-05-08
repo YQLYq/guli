@@ -13,4 +13,5 @@ import com.yql.guli.product.entity.CategoryBrandRelationEntity;
  */
 public interface CategoryBrandRelationService extends CrudService<CategoryBrandRelationEntity, CategoryBrandRelationDTO> {
 
+    void saveDetail(CategoryBrandRelationDTO dto);
 }

@@ -38,9 +38,9 @@ public abstract class CrudServiceImpl<M extends BaseMapper<T>, T, D> extends Bas
             getPage(params, null, false),
             getWrapper(params)
         );
-
         return getPageData(page, currentDtoClass());
     }
+
 
     @Override
     public List<D> list(Map<String, Object> params) {

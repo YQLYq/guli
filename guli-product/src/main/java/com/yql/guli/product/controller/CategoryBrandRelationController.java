@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -37,6 +38,7 @@ import java.util.Map;
  * @since 1.0.0 2023-04-18
  */
 @RestController
+@Transactional
 @RequestMapping("product/categorybrandrelation")
 @Api(tags="品牌分类关联")
 public class CategoryBrandRelationController {
@@ -103,7 +105,7 @@ public class CategoryBrandRelationController {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        categoryBrandRelationService.saveDto(dto);
+        categoryBrandRelationService.saveDetail(dto);
 
         return new Result();
     }

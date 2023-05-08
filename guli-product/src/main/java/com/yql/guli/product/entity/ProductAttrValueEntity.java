@@ -2,7 +2,6 @@ package com.yql.guli.product.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 
 /**
  * spu属性值
@@ -10,10 +9,8 @@ import lombok.Data;
  * @author yyy yyy@gmail.com
  * @since 1.0.0 2023-04-18
  */
-@Data
 @TableName("pms_product_attr_value")
 public class ProductAttrValueEntity {
-
     /**
      * id
      */
@@ -22,25 +19,205 @@ public class ProductAttrValueEntity {
     /**
      * 商品id
      */
-	private Long spuId;
+    private Long spuId;
     /**
      * 属性id
      */
-	private Long attrId;
+    private Long attrId;
     /**
      * 属性名
      */
-	private String attrName;
+    private String attrName;
     /**
      * 属性值
      */
-	private String attrValue;
+    private String attrValue;
     /**
      * 顺序
      */
-	private Integer attrSort;
+    private Integer attrSort;
     /**
      * 快速展示【是否展示在介绍上；0-否 1-是】
      */
-	private Integer quickShow;
+    private Integer quickShow;
+
+    @SuppressWarnings("all")
+    public ProductAttrValueEntity() {
+    }
+
+    /**
+     * id
+     */
+    @SuppressWarnings("all")
+    public Long getId() {
+        return this.id;
+    }
+
+    /**
+     * 商品id
+     */
+    @SuppressWarnings("all")
+    public Long getSpuId() {
+        return this.spuId;
+    }
+
+    /**
+     * 属性id
+     */
+    @SuppressWarnings("all")
+    public Long getAttrId() {
+        return this.attrId;
+    }
+
+    /**
+     * 属性名
+     */
+    @SuppressWarnings("all")
+    public String getAttrName() {
+        return this.attrName;
+    }
+
+    /**
+     * 属性值
+     */
+    @SuppressWarnings("all")
+    public String getAttrValue() {
+        return this.attrValue;
+    }
+
+    /**
+     * 顺序
+     */
+    @SuppressWarnings("all")
+    public Integer getAttrSort() {
+        return this.attrSort;
+    }
+
+    /**
+     * 快速展示【是否展示在介绍上；0-否 1-是】
+     */
+    @SuppressWarnings("all")
+    public Integer getQuickShow() {
+        return this.quickShow;
+    }
+
+    /**
+     * id
+     */
+    @SuppressWarnings("all")
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    /**
+     * 商品id
+     */
+    @SuppressWarnings("all")
+    public void setSpuId(final Long spuId) {
+        this.spuId = spuId;
+    }
+
+    /**
+     * 属性id
+     */
+    @SuppressWarnings("all")
+    public void setAttrId(final Long attrId) {
+        this.attrId = attrId;
+    }
+
+    /**
+     * 属性名
+     */
+    @SuppressWarnings("all")
+    public void setAttrName(final String attrName) {
+        this.attrName = attrName;
+    }
+
+    /**
+     * 属性值
+     */
+    @SuppressWarnings("all")
+    public void setAttrValue(final String attrValue) {
+        this.attrValue = attrValue;
+    }
+
+    /**
+     * 顺序
+     */
+    @SuppressWarnings("all")
+    public void setAttrSort(final Integer attrSort) {
+        this.attrSort = attrSort;
+    }
+
+    /**
+     * 快速展示【是否展示在介绍上；0-否 1-是】
+     */
+    @SuppressWarnings("all")
+    public void setQuickShow(final Integer quickShow) {
+        this.quickShow = quickShow;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof ProductAttrValueEntity)) return false;
+        final ProductAttrValueEntity other = (ProductAttrValueEntity) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$id = this.getId();
+        final Object other$id = other.getId();
+        if (this$id == null ? other$id != null : !this$id.equals(other$id)) return false;
+        final Object this$spuId = this.getSpuId();
+        final Object other$spuId = other.getSpuId();
+        if (this$spuId == null ? other$spuId != null : !this$spuId.equals(other$spuId)) return false;
+        final Object this$attrId = this.getAttrId();
+        final Object other$attrId = other.getAttrId();
+        if (this$attrId == null ? other$attrId != null : !this$attrId.equals(other$attrId)) return false;
+        final Object this$attrSort = this.getAttrSort();
+        final Object other$attrSort = other.getAttrSort();
+        if (this$attrSort == null ? other$attrSort != null : !this$attrSort.equals(other$attrSort)) return false;
+        final Object this$quickShow = this.getQuickShow();
+        final Object other$quickShow = other.getQuickShow();
+        if (this$quickShow == null ? other$quickShow != null : !this$quickShow.equals(other$quickShow)) return false;
+        final Object this$attrName = this.getAttrName();
+        final Object other$attrName = other.getAttrName();
+        if (this$attrName == null ? other$attrName != null : !this$attrName.equals(other$attrName)) return false;
+        final Object this$attrValue = this.getAttrValue();
+        final Object other$attrValue = other.getAttrValue();
+        if (this$attrValue == null ? other$attrValue != null : !this$attrValue.equals(other$attrValue)) return false;
+        return true;
+    }
+
+    @SuppressWarnings("all")
+    protected boolean canEqual(final Object other) {
+        return other instanceof ProductAttrValueEntity;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $id = this.getId();
+        result = result * PRIME + ($id == null ? 43 : $id.hashCode());
+        final Object $spuId = this.getSpuId();
+        result = result * PRIME + ($spuId == null ? 43 : $spuId.hashCode());
+        final Object $attrId = this.getAttrId();
+        result = result * PRIME + ($attrId == null ? 43 : $attrId.hashCode());
+        final Object $attrSort = this.getAttrSort();
+        result = result * PRIME + ($attrSort == null ? 43 : $attrSort.hashCode());
+        final Object $quickShow = this.getQuickShow();
+        result = result * PRIME + ($quickShow == null ? 43 : $quickShow.hashCode());
+        final Object $attrName = this.getAttrName();
+        result = result * PRIME + ($attrName == null ? 43 : $attrName.hashCode());
+        final Object $attrValue = this.getAttrValue();
+        result = result * PRIME + ($attrValue == null ? 43 : $attrValue.hashCode());
+        return result;
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public String toString() {
+        return "ProductAttrValueEntity(id=" + this.getId() + ", spuId=" + this.getSpuId() + ", attrId=" + this.getAttrId() + ", attrName=" + this.getAttrName() + ", attrValue=" + this.getAttrValue() + ", attrSort=" + this.getAttrSort() + ", quickShow=" + this.getQuickShow() + ")";
+    }
 }

@@ -3,7 +3,9 @@ package com.yql.guli.product.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -13,6 +15,8 @@ import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.product.dto.AttrDTO;
 import com.yql.guli.product.excel.AttrExcel;
 import com.yql.guli.product.service.AttrService;
+import com.yql.guli.product.vo.AttrInfoVO;
+import com.yql.guli.product.vo.AttrVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,8 +41,13 @@ import java.util.Map;
 @RequestMapping("product/attr")
 @Api(tags="商品属性")
 public class AttrController {
-    @Autowired
+
     private AttrService attrService;
+
+    @Autowired
+    public void setAttrService(AttrService attrService) {
+        this.attrService = attrService;
+    }
 
     @GetMapping("page")
     @ApiOperation("分页")
@@ -54,53 +63,107 @@ public class AttrController {
 
         return new Result<PageData<AttrDTO>>().ok(page);
     }
+    /**
+     * 查询属性详情
+     * @author yql
+     * @date 19:27 2023/5/6
+     * @param id-属性分组id
+     * @return com.yql.guli.common.utils.R
+     **/
+    @GetMapping("/info/{attrId}")
+    @RequiresPermissions("product:attr:info")
+    public R getAttrInfo(@PathVariable("attrId") Long id){
+        AttrInfoVO attrInfoVO = attrService.getInfo(id);
+
+        return R.ok().put("attr",attrInfoVO);
+    }
 
     @GetMapping("{id}")
     @ApiOperation("信息")
     @RequiresPermissions("product:attr:info")
-    public Result<AttrDTO> get(@PathVariable("id") Long id){
+    public Result<AttrDTO> get(@PathVariable("id") Long id) {
         AttrDTO data = attrService.get(id);
 
         return new Result<AttrDTO>().ok(data);
     }
 
+
+    @GetMapping("/base/list/{id}")
+    @ApiOperation("信息")
+    @RequiresPermissions("product:attr:info")
+    public R  baseGetAttrList(@RequestParam Map<String,Object> map, @PathVariable("id") Long catelogid) {
+        PageUtils<AttrVo> page = attrService.queryBaseAttrPage(map,catelogid);
+
+        return R.ok().put("page",page);
+    }
+
+    @GetMapping("/sale/list/{id}")
+    @ApiOperation("信息")
+    @RequiresPermissions("product:attr:info")
+    public R saleGetAttrList(@RequestParam Map<String, Object> map, @PathVariable("id") Long catelogid) {
+        PageUtils<AttrVo> page = attrService.querySaleAttrPage(map, catelogid);
+
+        return R.ok().put("page", page);
+    }
     @PostMapping
     @ApiOperation("保存")
     @LogOperation("保存")
     @RequiresPermissions("product:attr:save")
-    public Result save(@RequestBody AttrDTO dto){
+    public R save(@RequestBody AttrDTO dto){
+        //效验数据
+        ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
+        attrService.saveDto(dto);
+        return  R.ok();
+    }
+
+    @PostMapping("/save")
+    @ApiOperation("保存")
+    @LogOperation("保存")
+    @RequiresPermissions("product:attr:save")
+    public R saveAttr(@RequestBody AttrDTO dto) {
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        attrService.saveDto(dto);
-
-        return new Result();
+        attrService.saveAttr(dto);
+        return R.ok();
     }
-
     @PutMapping
     @ApiOperation("修改")
     @LogOperation("修改")
     @RequiresPermissions("product:attr:update")
-    public Result update(@RequestBody AttrDTO dto){
+    public R update(@RequestBody AttrDTO dto){
         //效验数据
         ValidatorUtils.validateEntity(dto, UpdateGroup.class, DefaultGroup.class);
 
         attrService.update(dto);
 
-        return new Result();
+        return R.ok();
+    }
+
+    @PutMapping("/update")
+    @ApiOperation("修改")
+    @LogOperation("修改")
+    @RequiresPermissions("product:attr:update")
+    public R updateAttr(@RequestBody AttrDTO dto) {
+        //效验数据
+        ValidatorUtils.validateEntity(dto, UpdateGroup.class, DefaultGroup.class);
+
+        attrService.updateAttr(dto);
+
+        return R.ok();
     }
 
     @DeleteMapping
     @ApiOperation("删除")
     @LogOperation("删除")
     @RequiresPermissions("product:attr:delete")
-    public Result delete(@RequestBody Long[] ids){
+    public R delete(@RequestBody Long[] ids){
         //效验数据
         AssertUtils.isArrayEmpty(ids, "id");
 
         attrService.delete(ids);
 
-        return new Result();
+        return R.ok();
     }
 
     @GetMapping("export")

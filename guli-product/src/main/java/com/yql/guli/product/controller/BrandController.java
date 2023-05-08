@@ -88,9 +88,7 @@ public class BrandController {
     public Result update(@Validated(UpdateGroup.class) @RequestBody BrandDTO dto){
         //效验数据
         ValidatorUtils.validateEntity(dto, UpdateGroup.class, DefaultGroup.class);
-
-        brandService.update(dto);
-
+        brandService.updateDetail(dto);
         return new Result();
     }
 

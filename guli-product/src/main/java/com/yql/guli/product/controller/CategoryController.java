@@ -111,7 +111,7 @@ public class CategoryController {
         //效验数据
         ValidatorUtils.validateEntity(dto, UpdateGroup.class, DefaultGroup.class);
 
-        categoryService.update(dto);
+        categoryService.updateCascade(dto);
 
         return new Result();
     }
