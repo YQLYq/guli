@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 8.130.114.255:8848
+        namespace: d9db9093-aece-40eb-aa80-97af76873e9e
+        extension-configs:
+          - data-id: datasource.yaml
+            group: dev
+            refresh: true
+          - data-id: mybatis.yaml
+            group: dev
+            refresh: true
+          - data-id: other.yaml
+            group: dev
+            refresh: true
+      discovery:
+        server-addr: 8.130.114.255:8848
+  application:
+    name: guli-coupon
