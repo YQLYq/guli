@@ -473,13 +473,13 @@ export default {
       this.spu.skus[scope.$index].memberPrice[mpidx].price = e;
     },
     getMemberLevels() {
-      this.$http({
-        url: this.$http.adornUrl("/member/memberlevel/list"),
+      this.$axios({
+        url: "/member/memberlevel/list",
         method: "get",
-        params: this.$http.adornParams({
+        params: {
           page: 1,
           limit: 500
-        })
+        }
       })
         .then(({ data }) => {
           this.dataResp.memberLevels = data.page.list;
@@ -641,15 +641,15 @@ export default {
     getShowSaleAttr() {
       //获取当前分类可以使用的销售属性
       if (!this.dataResp.steped[1]) {
-        this.$http({
-          url: this.$http.adornUrl(
+        this.$axios({
+          url: 
             `/product/attr/sale/list/${this.spu.catalogId}`
-          ),
+          ,
           method: "get",
-          params: this.$http.adornParams({
+          params: {
             page: 1,
             limit: 500
-          })
+          }
         }).then(({ data }) => {
           this.dataResp.saleAttrs = data.page.list;
           data.page.list.forEach(item => {
@@ -667,12 +667,12 @@ export default {
     },
     showBaseAttrs() {
       if (!this.dataResp.steped[0]) {
-        this.$http({
-          url: this.$http.adornUrl(
+        this.$axios({
+          url: 
             `/product/attrgroup/${this.spu.catalogId}/withattr`
-          ),
+          ,
           method: "get",
-          params: this.$http.adornParams({})
+          params: {}
         }).then(({ data }) => {
           //先对表单的baseAttrs进行初始化
           data.data.forEach(item => {
@@ -700,10 +700,10 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.$http({
-            url: this.$http.adornUrl("/product/spuinfo/save"),
+          this.$axios({
+            url: "/product/spuinfo/save",
             method: "post",
-            data: this.$http.adornData(this.spu, false)
+            data: this.spu
           }).then(({ data }) => {
             if (data.code == 0) {
               this.$message({

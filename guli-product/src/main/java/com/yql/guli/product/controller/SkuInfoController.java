@@ -3,7 +3,9 @@ package com.yql.guli.product.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -11,6 +13,7 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.product.dto.SkuInfoDTO;
+import com.yql.guli.product.entity.SkuInfoEntity;
 import com.yql.guli.product.excel.SkuInfoExcel;
 import com.yql.guli.product.service.SkuInfoService;
 import io.swagger.annotations.Api;
@@ -64,6 +67,14 @@ public class SkuInfoController {
         return new Result<SkuInfoDTO>().ok(data);
     }
 
+    @GetMapping("list")
+    @ApiOperation("信息")
+    @RequiresPermissions("product:skuinfo:info")
+    public R list(@RequestParam Map<String, Object> params ) {
+        PageUtils<SkuInfoEntity> page = skuInfoService.getSkuInfo(params);
+
+        return R.ok().put("page",page);
+    }
     @PostMapping
     @ApiOperation("保存")
     @LogOperation("保存")

@@ -131,7 +131,7 @@ export default {
         postData.push({ attrId: item.attrId, attrGroupId: this.attrGroupId });
       });
       this.$axios({
-        url: "/product/attrgroup/attr/relation/delete",
+        url: "/product/attrgroup/attr/relation",
         method: "delete",
         data: postData
       }).then(({ data }) => {
@@ -148,7 +148,7 @@ export default {
       let data = [];
       data.push({ attrId, attrGroupId: this.attrGroupId });
       this.$axios({
-        url: "/product/attrgroup/attr/relation/delete",
+        url: "/product/attrgroup/attr/relation",
         method: "delete",
         data: data
       }).then(({ data }) => {

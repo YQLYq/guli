@@ -9,11 +9,21 @@
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+    <insert id="insertAttrGroupRelationVos">
+        insert into gulimall_pms.pms_attr_attrgroup_relation values ()
+    </insert>
     <update id="updateAttrGroupIdByAttrId">
         update pms_attr_attrgroup_relation
         set attr_group_id = #{attrGroupId,jdbcType=NUMERIC}
         where attr_id = #{attrId,jdbcType=NUMERIC}
     </update>
+    <delete id="deleteBatchRelation">
+        delete from pms_attr_attrgroup_relation where
+        <foreach collection="attrgroupRelationEntities" item="item" separator="or">
+            (attr_id = #{item.attrId} and attr_group_id = #{item.attrGroupId})
+        </foreach>
+        
+    </delete>
 
 
 </mapper>

@@ -1,3 +1,11 @@
+/*
+ * @Description:
+ * @Version: 2.0
+ * @Autor: 阳秦林
+ * @Date: 2023-04-18 10:57:24
+ * @LastEditors: 阳秦林
+ * @LastEditTime: 2023-05-10 13:41:19
+ */
 import Vue from 'vue'
 import Element from 'element-ui'
 import App from '@/App'
@@ -12,14 +20,16 @@ import renRadioGroup from '@/components/ren-radio-group'
 import renSelect from '@/components/ren-select'
 import renDeptTree from '@/components/ren-dept-tree'
 import renRegionTree from '@/components/ren-region-tree'
-import { hasPermission, getDictLabel } from '@/utils'
+import {getDictLabel, hasPermission} from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
-import axios from "axios"
+import axios from 'axios'
+import PubSub from 'pubsub-js'
+
 Vue.config.productionTip = false
 
 Vue.use(Element, {
   size: 'default',
-  i18n: (key, value) => i18n.t(key, value)
+  i18n: (key, value) => i18n.t(key, value),
 })
 
 Vue.use(renRadioGroup)
@@ -32,14 +42,14 @@ Vue.prototype.$http = http
 Vue.prototype.$hasPermission = hasPermission
 Vue.prototype.$getDictLabel = getDictLabel
 Vue.prototype.$axios = axios
-
+Vue.prototype.PubSub = PubSub
 // 保存整站vuex本地储存初始状态
 window.SITE_CONFIG['storeState'] = cloneDeep(store.state)
 // 设置axios基础接口
-axios.defaults.baseURL='http://localhost:88/api';
+axios.defaults.baseURL = 'http://localhost:88/api'
 new Vue({
   i18n,
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount('#app')

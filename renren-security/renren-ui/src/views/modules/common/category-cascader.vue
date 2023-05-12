@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: 阳秦林
+ * @Date: 2023-05-04 22:24:38
+ * @LastEditors: 阳秦林
+ * @LastEditTime: 2023-05-10 13:50:31
+-->
 <template>
   <!-- 
 使用说明：
@@ -54,12 +62,12 @@ export default {
     paths(v) {
       this.$emit('update:catelogPath', v)
       // //还可以使用pubsub-js进行传值
-      // this.PubSub.publish('catPath', v)
+      this.PubSub.publish('catPath', v)
     },
   },
   //方法集合
   methods: {
-    getCategorys () {
+    getCategorys() {
       this.$axios({
         url: '/product/category/list/tree',
         method: 'get',

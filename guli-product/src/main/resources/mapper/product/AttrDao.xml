@@ -15,6 +15,14 @@
         <result property="showDesc" column="show_desc"/>
         <result property="valueType" column="value_type"/>
     </resultMap>
+    <select id="selectNotRelation" resultMap="attrMap">
+        select *
+        from pms_attr
+        join pms_attr_attrgroup_relation on
+        <foreach collection="ids" item="id" separator="and">
+                 pms_attr.attr_id != #{id}
+        </foreach>;
+    </select>
 
 
 </mapper>

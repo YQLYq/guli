@@ -8,6 +8,7 @@ import com.yql.guli.product.entity.SpuInfoDescEntity;
 import com.yql.guli.product.service.SpuInfoDescService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import java.util.Map;
  * @since 1.0.0 2023-04-18
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SpuInfoDescServiceImpl extends CrudServiceImpl<SpuInfoDescDao, SpuInfoDescEntity, SpuInfoDescDTO> implements SpuInfoDescService {
 
     @Override
@@ -30,5 +32,8 @@ public class SpuInfoDescServiceImpl extends CrudServiceImpl<SpuInfoDescDao, SpuI
         return wrapper;
     }
 
-
+    @Override
+    public void saveSpuInfoDesc(SpuInfoDescEntity spuInfoDescEntity) {
+        this.baseDao.insert(spuInfoDescEntity);
+    }
 }

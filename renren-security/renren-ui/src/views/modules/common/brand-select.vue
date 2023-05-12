@@ -44,12 +44,12 @@ export default {
   //方法集合
   methods: {
     getCatBrands() {
-      this.$http({
-        url: this.$http.adornUrl("/product/categorybrandrelation/brands/list"),
+      this.$axios({
+        url: "/product/categorybrandrelation/brands/list",
         method: "get",
-        params: this.$http.adornParams({
+        params: {
           catId: this.catId
-        })
+        }
       }).then(({ data }) => {
         this.brands = data.data;
       });

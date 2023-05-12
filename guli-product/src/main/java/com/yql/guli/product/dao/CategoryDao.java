@@ -1,5 +1,4 @@
 package com.yql.guli.product.dao;
-
 import com.yql.guli.common.dao.BaseDao;
 import com.yql.guli.product.entity.CategoryEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,5 +11,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CategoryDao extends BaseDao<CategoryEntity> {
-	
+
 }

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: guli-product
+    name: guli-member
   cloud:
     nacos:
       config:
@@ -9,5 +9,6 @@ spring:
           - data-id: guli-mysql.yaml
             group: DEFAULT_GROUP
             refresh: true
+        namespace: 1b2145c5-963c-4a77-801e-ddc6a0d95274
       discovery:
         server-addr: 8.130.114.255:8848

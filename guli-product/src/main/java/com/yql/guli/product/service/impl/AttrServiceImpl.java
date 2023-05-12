@@ -73,7 +73,7 @@ public class AttrServiceImpl extends CrudServiceImpl<AttrDao, AttrEntity, AttrDT
     public void saveAttr(AttrDTO dto) {
         Optional.ofNullable(dto).ifPresent(attr -> {
             this.saveDto(attr);
-            if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()) {
+            if (attr.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() && attr.getAttrGroupId() != null) {
                 AttrAttrgroupRelationEntity relationEntity = new AttrAttrgroupRelationEntity();
                 relationEntity.setAttrId(attr.getAttrId());
                 relationEntity.setAttrGroupId(attr.getAttrGroupId());

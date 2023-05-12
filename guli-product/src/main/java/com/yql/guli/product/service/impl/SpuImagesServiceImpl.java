@@ -8,8 +8,11 @@ import com.yql.guli.product.entity.SpuImagesEntity;
 import com.yql.guli.product.service.SpuImagesService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * spu图片
@@ -18,6 +21,7 @@ import java.util.Map;
  * @since 1.0.0 2023-04-18
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SpuImagesServiceImpl extends CrudServiceImpl<SpuImagesDao, SpuImagesEntity, SpuImagesDTO> implements SpuImagesService {
 
     @Override
@@ -30,5 +34,18 @@ public class SpuImagesServiceImpl extends CrudServiceImpl<SpuImagesDao, SpuImage
         return wrapper;
     }
 
+    @Override
+    public void saveImages(Long id, List<String> images) {
+        if(images == null || images.size() == 0){
 
+        }else{
+            List<SpuImagesEntity> spuImagesEntities = images.stream().map(img -> {
+                SpuImagesEntity spuImagesEntity = new SpuImagesEntity();
+                spuImagesEntity.setSpuId(id);
+                spuImagesEntity.setImgUrl(img);
+                return spuImagesEntity;
+            }).collect(Collectors.toList());
+            this.saveBatch(spuImagesEntities);
+        }
+    }
 }

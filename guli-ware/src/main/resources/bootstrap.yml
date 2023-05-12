@@ -1,10 +1,11 @@
 spring:
   application:
-    name: guli-product
+    name: guli-ware
   cloud:
     nacos:
       config:
         server-addr: 8.130.114.255:8848
+        namespace: 2fe33049-7529-4b42-89d7-8e98b018cf34
         extension-configs:
           - data-id: guli-mysql.yaml
             group: DEFAULT_GROUP

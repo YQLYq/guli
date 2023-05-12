@@ -1,8 +1,11 @@
 package com.yql.guli.product.service;
 
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.service.CrudService;
 import com.yql.guli.product.dto.SkuInfoDTO;
 import com.yql.guli.product.entity.SkuInfoEntity;
+
+import java.util.Map;
 
 /**
  * sku信息
@@ -12,4 +15,5 @@ import com.yql.guli.product.entity.SkuInfoEntity;
  */
 public interface SkuInfoService extends CrudService<SkuInfoEntity, SkuInfoDTO> {
 
+    PageUtils<SkuInfoEntity> getSkuInfo(Map<String, Object> params);
 }

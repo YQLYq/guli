@@ -3,7 +3,9 @@ package com.yql.guli.coupon.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.to.SpuBoundTo;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -75,6 +77,20 @@ public class SpuBoundsController {
         spuBoundsService.saveDto(dto);
 
         return new Result();
+    }
+
+
+    @PostMapping("/save")
+    @ApiOperation("保存")
+    @LogOperation("保存")
+    @RequiresPermissions("coupon:spubounds:save")
+    public R saveSpuBounds(@RequestBody SpuBoundTo spuBoundTo) {
+        //效验数据
+        ValidatorUtils.validateEntity(spuBoundTo, AddGroup.class, DefaultGroup.class);
+
+        spuBoundsService.saveSpuBound(spuBoundTo);
+
+        return  R.ok();
     }
 
     @PutMapping

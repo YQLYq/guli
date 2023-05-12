@@ -1,6 +1,7 @@
 package com.yql.guli.coupon.service;
 
 import com.yql.guli.common.service.CrudService;
+import com.yql.guli.common.to.SkuReductionTo;
 import com.yql.guli.coupon.dto.SkuFullReductionDTO;
 import com.yql.guli.coupon.entity.SkuFullReductionEntity;
 
@@ -12,4 +13,5 @@ import com.yql.guli.coupon.entity.SkuFullReductionEntity;
  */
 public interface SkuFullReductionService extends CrudService<SkuFullReductionEntity, SkuFullReductionDTO> {
 
+    void saveSkuReduction(SkuReductionTo to);
 }

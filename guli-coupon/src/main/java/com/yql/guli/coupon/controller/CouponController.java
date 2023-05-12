@@ -4,7 +4,6 @@ import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
 import com.yql.guli.common.utils.ExcelUtils;
-import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -12,7 +11,6 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.coupon.dto.CouponDTO;
-import com.yql.guli.coupon.entity.CouponEntity;
 import com.yql.guli.coupon.excel.CouponExcel;
 import com.yql.guli.coupon.service.CouponService;
 import io.swagger.annotations.Api;
@@ -20,13 +18,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 /**
@@ -48,21 +44,8 @@ import java.util.Map;
 public class CouponController {
     @Autowired
     private CouponService couponService;
-    @Value("${coupon.user.name}")
-    String name;
-    @Value("${coupon.user.age}")
-    Integer age;
-    @RequestMapping("/test")
-    public R test(){
-        return  R.ok().put("username",name).put("userage",age);
-    }
 
-    @RequestMapping("/member/list")
-    public R memberCoupon(){
-        CouponEntity couponEntity = new CouponEntity();
-        couponEntity.setCouponName("满1000000减1");
-        return R.ok().put("coupons", Arrays.asList(couponEntity));
-    }
+
 
     @GetMapping("page")
     @ApiOperation("分页")

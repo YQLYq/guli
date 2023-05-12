@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.service.BaseService;
 import com.yql.guli.common.utils.ConvertUtils;
 import org.apache.ibatis.binding.MapperMethod;
@@ -108,6 +109,13 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
         return getPageData(page.getRecords(), page.getTotal(), target);
     }
 
+    public <T> PageUtils<T> setPageAndList(IPage<T> iPage,List<T> list) {
+            return new PageUtils<>(iPage,list);
+    }
+
+    public <T> PageUtils<T> setPageUtils(IPage<T> iPage) {
+        return new PageUtils<>(iPage);
+    }
     protected void paramsToLike(Map<String, Object> params, String... likes){
         for (String like : likes){
             String val = (String)params.get(like);

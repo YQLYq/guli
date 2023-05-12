@@ -4,6 +4,8 @@ import com.yql.guli.common.service.CrudService;
 import com.yql.guli.product.dto.SpuImagesDTO;
 import com.yql.guli.product.entity.SpuImagesEntity;
 
+import java.util.List;
+
 
 /**
  * spu图片
@@ -13,4 +15,5 @@ import com.yql.guli.product.entity.SpuImagesEntity;
  */
 public interface SpuImagesService extends CrudService<SpuImagesEntity, SpuImagesDTO> {
 
+    void saveImages(Long id, List<String> images);
 }

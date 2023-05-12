@@ -3,7 +3,9 @@ package com.yql.guli.coupon.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.to.SkuReductionTo;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -77,6 +79,18 @@ public class SkuFullReductionController {
         return new Result();
     }
 
+    @PostMapping("/saveinfo")
+    @ApiOperation("保存")
+    @LogOperation("保存")
+    @RequiresPermissions("coupon:skufullreduction:save")
+    public R saveInfo(@RequestBody SkuReductionTo to) {
+        //效验数据
+        ValidatorUtils.validateEntity(to, AddGroup.class, DefaultGroup.class);
+
+        skuFullReductionService.saveSkuReduction(to);
+
+        return R.ok();
+    }
     @PutMapping
     @ApiOperation("修改")
     @LogOperation("修改")

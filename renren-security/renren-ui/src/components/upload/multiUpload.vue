@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-upload
-      action="https://guli-1315954707.cos.ap-guangzhou.myqcloud.com"
+      action="http://guli-yql.oss-cn-guangzhou.aliyuncs.com"
       :data="dataObj"
       list-type="picture-card"
       :file-list="fileList"
@@ -20,8 +20,8 @@
   </div>
 </template>
 <script>
-import { policy } from "./policy";
-import { getUUID } from '@/utils'
+import {getUUID} from '@/utils'
+
 export default {
   name: "multiUpload",
   props: {
@@ -77,7 +77,10 @@ export default {
     beforeUpload(file) {
       let _self = this;
       return new Promise((resolve, reject) => {
-        policy()
+        this.$axios({
+          url: '/thirdparty/oss/policy',
+          method: 'get',
+        })
           .then(response => {
             console.log("这是什么${filename}");
             _self.dataObj.policy = response.data.policy;

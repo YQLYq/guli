@@ -1,6 +1,7 @@
 package com.yql.guli.coupon.service;
 
 import com.yql.guli.common.service.CrudService;
+import com.yql.guli.common.to.SpuBoundTo;
 import com.yql.guli.coupon.dto.SpuBoundsDTO;
 import com.yql.guli.coupon.entity.SpuBoundsEntity;
 
@@ -12,4 +13,5 @@ import com.yql.guli.coupon.entity.SpuBoundsEntity;
  */
 public interface SpuBoundsService extends CrudService<SpuBoundsEntity, SpuBoundsDTO> {
 
+    void saveSpuBound(SpuBoundTo spuBoundTo);
 }

@@ -3,7 +3,9 @@ package com.yql.guli.member.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -11,6 +13,7 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.member.dto.MemberLevelDTO;
+import com.yql.guli.member.entity.MemberLevelEntity;
 import com.yql.guli.member.excel.MemberLevelExcel;
 import com.yql.guli.member.service.MemberLevelService;
 import io.swagger.annotations.Api;
@@ -55,13 +58,21 @@ public class MemberLevelController {
         return new Result<PageData<MemberLevelDTO>>().ok(page);
     }
 
+    @GetMapping("/list")
+    @RequiresPermissions("member:memberlevel:page")
+    public R list (@ApiIgnore @RequestParam Map<String, Object> params) {
+        PageUtils<MemberLevelEntity> page = memberLevelService.selectList(params);
+
+        return R.ok().put("page",page);
+    }
+
     @GetMapping("{id}")
     @ApiOperation("信息")
     @RequiresPermissions("member:memberlevel:info")
-    public Result<MemberLevelDTO> get(@PathVariable("id") Long id){
+    public R get(@PathVariable("id") Long id){
         MemberLevelDTO data = memberLevelService.get(id);
 
-        return new Result<MemberLevelDTO>().ok(data);
+        return R.ok().put("memberLevel",data);
     }
 
     @PostMapping
@@ -89,6 +100,7 @@ public class MemberLevelController {
 
         return new Result();
     }
+
 
     @DeleteMapping
     @ApiOperation("删除")

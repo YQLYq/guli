@@ -16,6 +16,8 @@ import com.yql.guli.product.dto.CategoryBrandRelationDTO;
 import com.yql.guli.product.entity.CategoryBrandRelationEntity;
 import com.yql.guli.product.excel.CategoryBrandRelationExcel;
 import com.yql.guli.product.service.CategoryBrandRelationService;
+import com.yql.guli.product.vo.BrandRelationVo;
+import com.yql.guli.product.vo.CatelogVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -59,6 +61,33 @@ public class CategoryBrandRelationController {
         return R.ok().put("data",data);
     }
 
+    @GetMapping("/brands/list")
+    @ApiOperation("获取品牌关联的分类")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.LIMIT, value = "每页显示记录数", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.ORDER_FIELD, value = "排序字段", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType = "String")
+    })
+    @RequiresPermissions("product:categorybrandrelation:page")
+    public R catelogListByCateId(@ApiIgnore @RequestParam("catId") Long catId) {
+        List<BrandRelationVo> data = categoryBrandRelationService.getBrandByCateId(catId);
+        return R.ok().put("data", data);
+    }
+
+    @GetMapping("/catelog/list")
+    @ApiOperation("获取品牌关联的分类")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.LIMIT, value = "每页显示记录数", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.ORDER_FIELD, value = "排序字段", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType = "String")
+    })
+    @RequiresPermissions("product:categorybrandrelation:page")
+    public R getCateByBrandId(@ApiIgnore @RequestParam("brandId") Long brandId) {
+        CatelogVo data = categoryBrandRelationService.getCateByBrandId(brandId);
+        return R.ok().put("data", data);
+    }
 
     @GetMapping("page")
     @ApiOperation("分页")

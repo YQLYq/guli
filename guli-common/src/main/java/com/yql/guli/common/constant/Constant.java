@@ -42,7 +42,10 @@ public interface Constant {
      * 创建时间字段名
      */
     String CREATE_DATE = "create_date";
-
+    /**
+     * 成功
+     **/
+    String SUCCESS_String = "success";
     /**
      * 数据权限过滤
      */
