@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: guli-search
+  thymeleaf:
+    cache: false
+  cloud:
+    nacos:
+      config:
+        server-addr: 8.130.114.255:8848
+        namespace: 4f4d22d4-e7f5-444c-a2b6-a7a991243768
+        extension-configs:
+          - data-id: guli-mysql.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+      discovery:
+        server-addr: 8.130.114.255:8848
