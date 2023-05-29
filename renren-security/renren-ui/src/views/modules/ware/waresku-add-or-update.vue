@@ -85,16 +85,16 @@ export default {
         this.$refs["dataForm"].resetFields();
         if (this.dataForm.id) {
           this.$http({
-            url: this.$http.adornUrl(`/ware/waresku/info/${this.dataForm.id}`),
+            url: this.$http.adornUrl(`/ware/waresku/${this.dataForm.id}`),
             method: "get",
             params: this.$http.adornParams()
           }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.dataForm.skuId = data.wareSku.skuId;
-              this.dataForm.wareId = data.wareSku.wareId;
-              this.dataForm.stock = data.wareSku.stock;
-              this.dataForm.skuName = data.wareSku.skuName;
-              this.dataForm.stockLocked = data.wareSku.stockLocked;
+              this.dataForm.skuId = data.data.skuId;
+              this.dataForm.wareId = data.data.wareId;
+              this.dataForm.stock = data.data.stock;
+              this.dataForm.skuName = data.data.skuName;
+              this.dataForm.stockLocked = data.data.stockLocked;
             }
           });
         }
@@ -104,19 +104,17 @@ export default {
     dataFormSubmit() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          this.$http({
-            url: this.$http.adornUrl(
-              `/ware/waresku/${!this.dataForm.id ? "save" : "update"}`
-            ),
-            method: "post",
-            data: this.$http.adornData({
+          this.$axios({
+            url: `/ware/waresku/`,
+            method: !this.dataForm.id ? "post" : "put",
+            data: {
               id: this.dataForm.id || undefined,
               skuId: this.dataForm.skuId,
               wareId: this.dataForm.wareId,
               stock: this.dataForm.stock,
               skuName: this.dataForm.skuName,
               stockLocked: this.dataForm.stockLocked
-            })
+            }
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,5 +73,11 @@ public class SkuInfoServiceImpl extends CrudServiceImpl<SkuInfoDao, SkuInfoEntit
         LambdaQueryWrapper<SkuInfoEntity> keyWrapper = getKeyWrapper(params);
         IPage<SkuInfoEntity> page = this.page(new PageUtil<SkuInfoEntity>().getPage(params), keyWrapper);
         return new PageUtils<>(page);
+    }
+
+    @Override
+    public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
+        LambdaQueryWrapper<SkuInfoEntity> skuInfoEntityLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        return this.baseMapper.selectList(skuInfoEntityLambdaQueryWrapper.eq(SkuInfoEntity::getSpuId, spuId));
     }
 }

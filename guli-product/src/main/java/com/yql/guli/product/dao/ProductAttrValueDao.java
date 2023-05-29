@@ -1,8 +1,12 @@
 package com.yql.guli.product.dao;
 
 import com.yql.guli.common.dao.BaseDao;
+import com.yql.guli.product.dto.ProductAttrValueDTO;
 import com.yql.guli.product.entity.ProductAttrValueEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * spu属性值
@@ -12,5 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ProductAttrValueDao extends BaseDao<ProductAttrValueEntity> {
-	
+    List<ProductAttrValueEntity> selectAllBySpuId(@Param("spuId") Long spuId);
+
 }

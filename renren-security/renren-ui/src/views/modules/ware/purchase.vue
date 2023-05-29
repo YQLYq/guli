@@ -178,9 +178,9 @@
       <el-select v-model="userId" filterable placeholder="请选择">
         <el-option
           v-for="item in userList"
-          :key="item.userId"
+          :key="item.id"
           :label="item.username"
-          :value="item.userId"
+          :value="item.id"
         ></el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
@@ -230,17 +230,17 @@ export default {
       let _this = this
       let user = {}
       this.userList.forEach((item) => {
-        if (item.userId == _this.userId) {
+        if (item.id == _this.userId) {
           user = item
         }
       })
       this.caigoudialogVisible = false
       this.$http({
-        url: this.$http.adornUrl(`/ware/purchase/update`),
-        method: 'post',
+        url: this.$http.adornUrl(`/ware/purchase`),
+        method: 'put',
         data: this.$http.adornData({
           id: this.currentRow.id || undefined,
-          assigneeId: user.userId,
+          assigneeId: user.id,
           assigneeName: user.username,
           phone: user.mobile,
           status: 1,
@@ -262,14 +262,14 @@ export default {
     },
     getUserList() {
       this.$http({
-        url: this.$http.adornUrl('/sys/user/list'),
+        url: this.$http.adornUrl('/sys/user/page'),
         method: 'get',
         params: this.$http.adornParams({
           page: 1,
           limit: 500,
         }),
       }).then(({ data }) => {
-        this.userList = data.page.list
+        this.userList = data.data.list
       })
     },
     // 获取数据列表
@@ -282,6 +282,7 @@ export default {
           page: this.pageIndex,
           limit: this.pageSize,
           key: this.dataForm.key,
+          status: this.dataForm.status
         }),
       }).then(({ data }) => {
         if (data && data.code === 0) {
@@ -332,10 +333,10 @@ export default {
           type: 'warning',
         }
       ).then(() => {
-        this.$http({
-          url: this.$http.adornUrl('/ware/purchase/delete'),
-          method: 'post',
-          data: this.$http.adornData(ids, false),
+        this.$axios({
+          url: '/ware/purchase',
+          method: 'delete',
+          data: ids
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({

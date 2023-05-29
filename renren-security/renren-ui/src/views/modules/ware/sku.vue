@@ -238,10 +238,10 @@ export default {
           type: 'warning',
         }
       ).then(() => {
-        this.$http({
-          url: this.$http.adornUrl('/ware/waresku/delete'),
-          method: 'post',
-          data: this.$http.adornData(ids, false),
+        this.$axios({
+          url: '/ware/waresku',
+          method: 'delete',
+          data: ids
         }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({

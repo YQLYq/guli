@@ -22,26 +22,38 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
 @SpringBootTest
 class ProductApplicationTests {
-
-
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Test
     public void testConfig(){
-
+        ValueOperations<String,String>ops = stringRedisTemplate.opsForValue();
+        ops.set("hello", "word_"+UUID.randomUUID().toString());
+        System.out.println(ops.get("hello"));
     }
 
+    @Test
+    public void testRedisson(){
+        System.out.println(redissonClient);
+    }
 
 
     @Autowired

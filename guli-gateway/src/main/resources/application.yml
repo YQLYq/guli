@@ -4,7 +4,6 @@ spring:
   cloud:
     gateway:
       routes:
-
         - id: member_route
           uri: lb://guli-member
           predicates:
@@ -40,3 +39,12 @@ spring:
           filters:
             - RewritePath=/api/?(?<segment>.*), /renren-admin/$\{segment}
 
+        - id: product_host_route
+          uri: lb://guli-product
+          predicates:
+            - Host=guli.com
+
+        - id: search_host_route
+          uri: lb://guli-search
+          predicates:
+            - Host=search.guli.com

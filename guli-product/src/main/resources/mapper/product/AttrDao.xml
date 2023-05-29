@@ -23,6 +23,18 @@
                  pms_attr.attr_id != #{id}
         </foreach>;
     </select>
+    <sql id="Base_Column_List">
+        attr_id, attr_name, search_type, icon, value_select, attr_type, enable, catelog_id, show_desc, value_type
+    </sql>
+    <select id="selectByAttrIdAndSearchType" resultType="java.lang.Long">
+        select
+            attr_id
+        from pms_attr where attr_id in (
+        <foreach collection="attrIds" item="id" separator=",">
+             #{id}
+        </foreach>)
+        and search_type = 1;
+    </select>
 
 
 </mapper>

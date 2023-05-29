@@ -105,6 +105,20 @@ public class AttrServiceImpl extends CrudServiceImpl<AttrDao, AttrEntity, AttrDT
         return attrInfoVO;
     }
 
+    /**
+     * 查询可以被索引的属性
+     *
+     * @param attrIds
+     * @return java.util.List<java.lang.Long>
+     * @author yql
+     * @date 20:35 2023/5/16
+     **/
+    @Override
+    public List<Long> selectSearchAttrs(List<Long> attrIds) {
+        List<Long> longs = attrDao.selectByAttrIdAndSearchType(attrIds);
+        return longs;
+    }
+
     @Override
     public void updateAttr(AttrDTO dto) {
         AttrInfoVO info = this.getInfo(dto.getAttrId());

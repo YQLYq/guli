@@ -12,6 +12,11 @@
         <result property="wareId" column="ware_id"/>
         <result property="status" column="status"/>
     </resultMap>
+    <update id="updateStatusByPurchaseId">
+        update wms_purchase_detail
+        set status = #{status,jdbcType=NUMERIC}
+        where purchase_id = #{purchaseId,jdbcType=NUMERIC}
+    </update>
 
 
 </mapper>

@@ -29,4 +29,12 @@ public interface SpuInfoService extends CrudService<SpuInfoEntity, SpuInfoDTO> {
     void saveBaseSpuInfo(SpuInfoEntity spuInfoEntity);
 
     PageUtils<SpuInfoVo> getSpuInfoList(Map<String, Object> params);
+    /**
+     * 商品上架 并存入es
+     * @author yql
+     * @date 19:39 2023/5/16
+     * @param 
+     * @return void
+     **/
+    void upSpu(Long spuId);
 }

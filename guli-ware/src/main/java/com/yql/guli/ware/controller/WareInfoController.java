@@ -3,7 +3,9 @@ package com.yql.guli.ware.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -55,6 +57,20 @@ public class WareInfoController {
         return new Result<PageData<WareInfoDTO>>().ok(page);
     }
 
+    @GetMapping("list")
+    @ApiOperation("分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = Constant.PAGE, value = "当前页码，从1开始", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.LIMIT, value = "每页显示记录数", paramType = "query", required = true, dataType = "int"),
+            @ApiImplicitParam(name = Constant.ORDER_FIELD, value = "排序字段", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = Constant.ORDER, value = "排序方式，可选值(asc、desc)", paramType = "query", dataType = "String")
+    })
+    @RequiresPermissions("ware:wareinfo:page")
+    public R list(@ApiIgnore @RequestParam Map<String, Object> params) {
+        PageUtils<WareInfoDTO> page = wareInfoService.getWareInfolist(params);
+
+        return R.ok().put("page",page);
+    }
     @GetMapping("{id}")
     @ApiOperation("信息")
     @RequiresPermissions("ware:wareinfo:info")

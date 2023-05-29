@@ -1,5 +1,6 @@
 server:
   port: 8000
-logging:
-  level:
-    com.yql.guli: debug
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

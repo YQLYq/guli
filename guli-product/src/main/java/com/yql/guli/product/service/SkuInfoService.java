@@ -5,6 +5,7 @@ import com.yql.guli.common.service.CrudService;
 import com.yql.guli.product.dto.SkuInfoDTO;
 import com.yql.guli.product.entity.SkuInfoEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +17,6 @@ import java.util.Map;
 public interface SkuInfoService extends CrudService<SkuInfoEntity, SkuInfoDTO> {
 
     PageUtils<SkuInfoEntity> getSkuInfo(Map<String, Object> params);
+
+    List<SkuInfoEntity> getSkusBySpuId(Long spuId);
 }

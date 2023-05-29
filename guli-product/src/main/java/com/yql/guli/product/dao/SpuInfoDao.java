@@ -3,6 +3,7 @@ package com.yql.guli.product.dao;
 import com.yql.guli.common.dao.BaseDao;
 import com.yql.guli.product.entity.SpuInfoEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * spu信息
@@ -12,5 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SpuInfoDao extends BaseDao<SpuInfoEntity> {
-	
+
+    void updateSpuStatus(@Param("spuId") Long spuId, @Param("code") int code);
 }

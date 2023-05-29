@@ -18,5 +18,6 @@
         <module>guli-common</module>
         <module>guli-gateway</module>
         <module>guli-third-party</module>
+        <module>guli-search</module>
     </modules>
 </project>

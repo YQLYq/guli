@@ -23,4 +23,6 @@ public interface AttrDao extends BaseDao<AttrEntity> {
      * @return List
      **/
     List<AttrEntity> selectNotRelation(@Param("ids") List<Long> ids);
+
+    List<Long> selectByAttrIdAndSearchType(@Param("attrIds") List<Long> attrIds);
 }

@@ -122,7 +122,9 @@ export default {
     CategoryCascader,
     BrandSelect
   },
-  activated() {
+  activated () {
+    this.dataForm.catelogId = 0,
+    this.dataForm.brandId = 0,
     this.getDataList();
   },
   methods: {

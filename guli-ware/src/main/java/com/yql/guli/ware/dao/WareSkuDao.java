@@ -1,8 +1,8 @@
 package com.yql.guli.ware.dao;
-
 import com.yql.guli.common.dao.BaseDao;
 import com.yql.guli.ware.entity.WareSkuEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 商品库存
@@ -12,5 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface WareSkuDao extends BaseDao<WareSkuEntity> {
-	
+    WareSkuEntity selectOneBySkuIdAndWareId(@Param("skuId") Long skuId, @Param("wareId") Long wareId);
+
+    Long  selectSumStockBySkuId(@Param("skuId") Long skuId);
 }

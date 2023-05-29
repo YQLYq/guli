@@ -3,7 +3,7 @@
 
 <mapper namespace="com.yql.guli.ware.dao.WareSkuDao">
 
-    <resultMap type="com.yql.guli.ware.entity.WareSkuEntity" id="wareSkuMap">
+    <resultMap type="com.yql.guli.ware.entity.WareSkuEntity" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="skuId" column="sku_id"/>
         <result property="wareId" column="ware_id"/>
@@ -11,6 +11,22 @@
         <result property="skuName" column="sku_name"/>
         <result property="stockLocked" column="stock_locked"/>
     </resultMap>
+    <sql id="Base_Column_List">
+        id, sku_id, ware_id, stock, sku_name, stock_locked
+    </sql>
+    <select id="selectOneBySkuIdAndWareId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wms_ware_sku
+        where
+        sku_id = #{skuId,jdbcType=NUMERIC}
+        AND ware_id = #{wareId,jdbcType=NUMERIC}
+    </select>
+    <select id="selectSumStockBySkuId" resultType="java.lang.Long">
+        select SUM(stock - stock_locked)
+        from wms_ware_sku
+        where sku_id = #{skuId,jdbcType=NUMERIC}
+    </select>
 
 
 </mapper>

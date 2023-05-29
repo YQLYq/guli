@@ -4,6 +4,8 @@ import com.yql.guli.common.service.CrudService;
 import com.yql.guli.product.dto.ProductAttrValueDTO;
 import com.yql.guli.product.entity.ProductAttrValueEntity;
 
+import java.util.List;
+
 
 /**
  * spu属性值
@@ -13,4 +15,7 @@ import com.yql.guli.product.entity.ProductAttrValueEntity;
  */
 public interface ProductAttrValueService extends CrudService<ProductAttrValueEntity, ProductAttrValueDTO> {
 
+    List<ProductAttrValueEntity> getBaseGetListForSpu(Long spuId);
+
+    void updateBySpuId(List<ProductAttrValueEntity> dto,Long spuId);
 }

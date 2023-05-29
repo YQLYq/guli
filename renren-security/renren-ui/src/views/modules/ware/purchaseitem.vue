@@ -240,7 +240,19 @@ export default {
               method: 'post',
               data: this.$http.adornData({ items: items }, false),
             }).then(({ data }) => {
-              this.getDataList()
+              if (data && data.code === 0) {
+
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.getDataList()
+                  },
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
             })
           })
           .catch(() => {})
@@ -253,7 +265,18 @@ export default {
             false
           ),
         }).then(({ data }) => {
-          this.getDataList()
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1500,
+              onClose: () => {
+                this.getDataList()
+              },
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
         })
       }
       this.mergedialogVisible = false

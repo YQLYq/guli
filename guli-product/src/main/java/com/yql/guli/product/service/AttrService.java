@@ -7,6 +7,7 @@ import com.yql.guli.product.entity.AttrEntity;
 import com.yql.guli.product.vo.AttrInfoVO;
 import com.yql.guli.product.vo.AttrVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,4 +27,12 @@ public interface AttrService extends CrudService<AttrEntity, AttrDTO> {
     void updateAttr(AttrDTO dto);
 
     PageUtils<AttrVo> querySaleAttrPage(Map<String, Object> map, Long catelogid);
+    /**
+     * 查询可以被索引的属性
+     * @author yql
+     * @date 20:59 2023/5/16
+     * @param 
+     * @return java.util.List<java.lang.Long>
+     **/
+    List<Long> selectSearchAttrs(List<Long> attrIds);
 }

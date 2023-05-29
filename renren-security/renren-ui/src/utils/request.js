@@ -9,7 +9,10 @@ import isPlainObject from 'lodash/isPlainObject'
 const http = axios.create({
   baseURL: window.SITE_CONFIG['apiURL'],
   timeout: 1000 * 180,
-  withCredentials: true
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8'
+  }
 })
 
 /**
@@ -93,6 +96,7 @@ http.adornParams = (params = {}, openDefultParams = true) => {
  *  form: 'application/x-www-form-urlencoded; charset=utf-8'
  */
 http.adornData = (data = {}, openDefultdata = true, contentType = 'json') => {
+
   var defaults = {
     't': new Date().getTime()
   }

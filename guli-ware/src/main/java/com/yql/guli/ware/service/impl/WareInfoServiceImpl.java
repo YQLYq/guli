@@ -1,7 +1,11 @@
 package com.yql.guli.ware.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.service.impl.CrudServiceImpl;
+import com.yql.guli.common.utils.PageUtil;
 import com.yql.guli.ware.dao.WareInfoDao;
 import com.yql.guli.ware.dto.WareInfoDTO;
 import com.yql.guli.ware.entity.WareInfoEntity;
@@ -30,5 +34,25 @@ public class WareInfoServiceImpl extends CrudServiceImpl<WareInfoDao, WareInfoEn
         return wrapper;
     }
 
+    public LambdaQueryWrapper<WareInfoEntity> getKeyWrapper(Map<String, Object> params) {
+        String key = (String) params.get("key");
+        String sidx = (String) params.get("sidx");
+        String order = (String) params.get("order");
+        LambdaQueryWrapper<WareInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(sidx) && StringUtils.isNotBlank(order)) {
+            queryWrapper.orderBy(StringUtils.isNotBlank(sidx), order.equals("asc"), WareInfoEntity::getId);
+        }
+        if (StringUtils.isNotBlank(key)) {
+            queryWrapper.and(wrapper -> wrapper.like(WareInfoEntity::getName, key).or().eq(WareInfoEntity::getId,key).or().like(WareInfoEntity::getAddress,key).or().like(WareInfoEntity::getAreacode,key));
+        }
+        return queryWrapper;
+    }
 
+    @Override
+    public PageUtils<WareInfoDTO> getWareInfolist(Map<String, Object> params) {
+        LambdaQueryWrapper<WareInfoEntity> keyWrapper = getKeyWrapper(params);
+        IPage<WareInfoEntity> page = this.page(new PageUtil<WareInfoEntity>().getPage(params), keyWrapper);
+
+        return new PageUtils<>(page);
+    }
 }

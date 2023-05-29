@@ -12,6 +12,15 @@
         <result property="attrSort" column="attr_sort"/>
         <result property="quickShow" column="quick_show"/>
     </resultMap>
-
-
+    <sql id="Base_Column_List">
+        id, spu_id, attr_id, attr_name, attr_value, attr_sort, quick_show
+    </sql>
+    <select id="selectAllBySpuId" resultMap="productAttrValueMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pms_product_attr_value
+        where
+        spu_id = #{spuId,jdbcType=NUMERIC}
+    </select>
+    
 </mapper>

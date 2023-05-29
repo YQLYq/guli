@@ -3,7 +3,10 @@ package com.yql.guli.ware.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
+import com.yql.guli.common.to.SkuHasStockVo;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -55,6 +58,12 @@ public class WareSkuController {
         return new Result<PageData<WareSkuDTO>>().ok(page);
     }
 
+    @GetMapping("list")
+    public R list(@RequestParam Map<String, Object> params) {
+        PageUtils<WareSkuDTO> page = wareSkuService.getSkuInfo(params);
+
+        return R.ok(Constant.SUCCESS_String).put("page",page);
+    }
     @GetMapping("{id}")
     @ApiOperation("信息")
     @RequiresPermissions("ware:waresku:info")
@@ -64,17 +73,22 @@ public class WareSkuController {
         return new Result<WareSkuDTO>().ok(data);
     }
 
+    @PostMapping("/hasStock")
+    public Result<List<SkuHasStockVo>> getSkuHasStock(@RequestBody List<Long> skuIds) {
+        List<SkuHasStockVo> data = wareSkuService.getSkuHashStock(skuIds);
+
+        return new Result<List<SkuHasStockVo>>().ok(data);
+    }
+
     @PostMapping
     @ApiOperation("保存")
     @LogOperation("保存")
     @RequiresPermissions("ware:waresku:save")
-    public Result save(@RequestBody WareSkuDTO dto){
+    public R save(@RequestBody WareSkuDTO dto){
         //效验数据
         ValidatorUtils.validateEntity(dto, AddGroup.class, DefaultGroup.class);
 
-        wareSkuService.saveDto(dto);
-
-        return new Result();
+        return wareSkuService.saveAndOpinion(dto);
     }
 
     @PutMapping
@@ -89,6 +103,9 @@ public class WareSkuController {
 
         return new Result();
     }
+
+
+
 
     @DeleteMapping
     @ApiOperation("删除")

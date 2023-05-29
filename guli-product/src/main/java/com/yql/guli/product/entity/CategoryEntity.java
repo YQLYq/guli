@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ import java.util.List;
  * @since 1.0.0 2023-04-18
  */
 @TableName("pms_category")
-public class CategoryEntity {
+public class CategoryEntity  implements Serializable {
     /**
      * 分类id
      */

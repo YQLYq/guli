@@ -3,7 +3,9 @@ package com.yql.guli.ware.controller;
 import com.yql.guli.common.annotation.LogOperation;
 import com.yql.guli.common.constant.Constant;
 import com.yql.guli.common.page.PageData;
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.utils.ExcelUtils;
+import com.yql.guli.common.utils.R;
 import com.yql.guli.common.utils.Result;
 import com.yql.guli.common.validator.AssertUtils;
 import com.yql.guli.common.validator.ValidatorUtils;
@@ -11,6 +13,7 @@ import com.yql.guli.common.validator.group.AddGroup;
 import com.yql.guli.common.validator.group.DefaultGroup;
 import com.yql.guli.common.validator.group.UpdateGroup;
 import com.yql.guli.ware.dto.PurchaseDetailDTO;
+import com.yql.guli.ware.entity.PurchaseDetailEntity;
 import com.yql.guli.ware.excel.PurchaseDetailExcel;
 import com.yql.guli.ware.service.PurchaseDetailService;
 import io.swagger.annotations.Api;
@@ -55,6 +58,12 @@ public class PurchaseDetailController {
         return new Result<PageData<PurchaseDetailDTO>>().ok(page);
     }
 
+    @GetMapping("list")
+    public R list(@RequestParam Map<String, Object> params) {
+        PageUtils<PurchaseDetailEntity> page = purchaseDetailService.getSkuInfo(params);
+
+        return R.ok(Constant.SUCCESS_String).put("page", page);
+    }
     @GetMapping("{id}")
     @ApiOperation("信息")
     @RequiresPermissions("ware:purchasedetail:info")

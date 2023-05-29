@@ -1,8 +1,11 @@
 package com.yql.guli.ware.service;
 
+import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.service.CrudService;
 import com.yql.guli.ware.dto.PurchaseDetailDTO;
 import com.yql.guli.ware.entity.PurchaseDetailEntity;
+
+import java.util.Map;
 
 /**
  * 
@@ -12,4 +15,7 @@ import com.yql.guli.ware.entity.PurchaseDetailEntity;
  */
 public interface PurchaseDetailService extends CrudService<PurchaseDetailEntity, PurchaseDetailDTO> {
 
+    PageUtils<PurchaseDetailEntity> getSkuInfo(Map<String, Object> params);
+
+    void updateStatusToReceiveEByPurchId(Long id);
 }
