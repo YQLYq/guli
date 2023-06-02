@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 @Data
 public class SearchResult {
@@ -64,6 +65,27 @@ public class SearchResult {
      * @return
      **/
     private List<CategoryVo> category;
+    /**
+     * 面包屑导航数据
+     * @author yql
+     * @date 21:30 2023/5/29
+     * @param 
+     * @return 
+     **/
+    private List<NavVo> navs = new ArrayList<>();
+    /**
+     * 存放查询的attrId
+     */
+    private List<Long> attrIds = new ArrayList<>();
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NavVo{
+        private String navName;
+        private String navValue;
+        private String link;
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

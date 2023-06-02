@@ -11,6 +11,30 @@
         <result property="attrValue" column="attr_value"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+    <resultMap id="skuItemSaleAttrVoMap" type="com.yql.guli.product.vo.SkuItemSaleAttrVo">
+        <result property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <collection property="attrValue" ofType="com.yql.guli.product.vo.AttrValueWithSkuId">
+            <result property="attrValues" column="attr_values"/>
+            <result property="skuIds" column="sku_ids"/>
+        </collection>
+    </resultMap>
+    <select id="selectdAttrWithSkuIdBySpuId" resultMap="skuItemSaleAttrVoMap">
+        SELECT
+            sale.attr_id,
+            sale.attr_name,
+            sale.attr_value attr_values,
+            GROUP_CONCAT(info.sku_id) sku_ids
+        FROM
+            pms_sku_info info
+            LEFT JOIN pms_sku_sale_attr_value sale ON sale.sku_id = info.sku_id
+        WHERE
+            info.spu_id = #{spuId}
+        GROUP BY
+            sale.attr_id,
+            sale.attr_name,
+            sale.attr_value
+    </select>
 
 
 </mapper>

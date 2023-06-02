@@ -19,5 +19,6 @@
         <module>guli-gateway</module>
         <module>guli-third-party</module>
         <module>guli-search</module>
+        <module>guli-auth-server</module>
     </modules>
 </project>

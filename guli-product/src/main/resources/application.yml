@@ -9,3 +9,8 @@ spring:
       cache-null-values: true
       key-prefix: Product_
       use-key-prefix: true
+guli:
+  thread:
+    core-pool-size: 20
+    max-pool-size: 200
+    keep-alive-time: 10

@@ -42,7 +42,7 @@ spring:
         - id: product_host_route
           uri: lb://guli-product
           predicates:
-            - Host=guli.com
+            - Host=guli.com,item.guli.com
 
         - id: search_host_route
           uri: lb://guli-search

@@ -33,10 +33,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MallSearchServiceImpl implements MallSearchService {
@@ -67,8 +71,9 @@ public class MallSearchServiceImpl implements MallSearchService {
     /**
      * 处理返回数据
      *
-     * @param
-     * @return com.yql.guli.search.vo.SearchResult
+     * @param search      返回结果
+     * @param searchParam 查询条件
+     * @return SearchResult 处理过的数据
      * @author yql
      * @date 21:56 2023/5/25
      **/
@@ -77,19 +82,14 @@ public class MallSearchServiceImpl implements MallSearchService {
         SearchHits hits = search.getHits();
         long value = hits.getTotalHits().value;
         List<SkuEsModel> skuEsModelList = new ArrayList<>();
-        //总记录数
+        // 总记录数
         searchResult.setTotal(value);
-        //页码
-        if (searchParam.getPageNum() == null){
-            searchResult.setPageNum(1);
-        }else {
-            searchResult.setPageNum(searchParam.getPageNum());
-        }
-        //总页码
+        // 页码
+        searchResult.setPageNum(searchParam.getPageNum() == null ? 1 : searchParam.getPageNum());
+        // 总页码
         int totalPages = Math.toIntExact(value % EsConstant.PRODUCT_PAGESIZE == 0 ? value / EsConstant.PRODUCT_PAGESIZE : (value / EsConstant.PRODUCT_PAGESIZE) + 1);
         searchResult.setTotalPages(totalPages);
-
-        //商品
+        // 商品
         SearchHit[] searchHits = hits.getHits();
         if (searchHits != null && searchHits.length > 0) {
             for (SearchHit searchHit : searchHits) {
@@ -103,38 +103,70 @@ public class MallSearchServiceImpl implements MallSearchService {
             }
         }
         searchResult.setProduct(skuEsModelList);
-        //商品的规格属性 从聚合获取
+        // 商品的规格属性 从聚合获取
         List<SearchResult.AttrVo> attrVos = new ArrayList<>();
         ParsedNested attr_agg = search.getAggregations().get("attr_agg");
         ParsedLongTerms attr_id_agg = attr_agg.getAggregations().get("attr_id_agg");
         List<? extends Terms.Bucket> attrIdAggBuckets = attr_id_agg.getBuckets();
-        for (Terms.Bucket attrIdAggBucket : attrIdAggBuckets) {
-            SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
-            attrVo.setAttrId(attrIdAggBucket.getKeyAsNumber().longValue());
-            ParsedStringTerms attrValue_aggs = attrIdAggBucket.getAggregations().get("attrValue_aggs");
-            ParsedStringTerms attrName_aggs = attrIdAggBucket.getAggregations().get("attrName_aggs");
-            attrVo.setAttrName(attrName_aggs.getBuckets().get(0).getKeyAsString());
-            List<? extends Terms.Bucket> buckets = attrValue_aggs.getBuckets();
-            List<String> attrValueList = buckets.stream().map(MultiBucketsAggregation.Bucket::getKeyAsString).collect(Collectors.toList());
-            attrVo.setAttrValue(attrValueList);
-            attrVos.add(attrVo);
-        }
+        Map<Long, SearchResult.AttrVo> attrMap = attrIdAggBuckets.stream()
+                .flatMap(bucket -> {
+                    SearchResult.AttrVo attrVo = new SearchResult.AttrVo();
+                    attrVo.setAttrId(bucket.getKeyAsNumber().longValue());
+                    ParsedStringTerms attrValue_aggs = bucket.getAggregations().get("attrValue_aggs");
+                    ParsedStringTerms attrName_aggs = bucket.getAggregations().get("attrName_aggs");
+                    attrVo.setAttrName(attrName_aggs.getBuckets().get(0).getKeyAsString());
+                    List<String> attrValueList = attrValue_aggs.getBuckets().stream().map(MultiBucketsAggregation.Bucket::getKeyAsString).collect(Collectors.toList());
+                    attrVo.setAttrValue(attrValueList);
+                    attrVos.add(attrVo);
+                    return Stream.of(attrVo);
+                }).collect(Collectors.toMap(SearchResult.AttrVo::getAttrId, Function.identity()));
         searchResult.setAttrs(attrVos);
-        //品牌属性
+        // 品牌属性
         List<SearchResult.BrandVo> brandVos = new ArrayList<>();
         ParsedLongTerms brand_agg = search.getAggregations().get("brand_agg");
         List<? extends Terms.Bucket> brandBuckets = brand_agg.getBuckets();
-        for (Terms.Bucket brandBucket : brandBuckets) {
+        Map<Long, SearchResult.BrandVo> brandVoMap = brandBuckets.stream().flatMap(bucket -> {
             SearchResult.BrandVo brandVo = new SearchResult.BrandVo();
-            brandVo.setBrandId(brandBucket.getKeyAsNumber().longValue());
-            ParsedStringTerms brand_name_agg = brandBucket.getAggregations().get("brand_name_agg");
+            brandVo.setBrandId(bucket.getKeyAsNumber().longValue());
+            ParsedStringTerms brand_name_agg = bucket.getAggregations().get("brand_name_agg");
             brandVo.setBrandName(brand_name_agg.getBuckets().get(0).getKeyAsString());
-            ParsedStringTerms brand_img_agg = brandBucket.getAggregations().get("brand_img_agg");
+            ParsedStringTerms brand_img_agg = bucket.getAggregations().get("brand_img_agg");
             brandVo.setBrandImg(brand_img_agg.getBuckets().get(0).getKeyAsString());
             brandVos.add(brandVo);
-        }
+            return Stream.of(brandVo);
+        }).collect(Collectors.toMap(SearchResult.BrandVo::getBrandId, Function.identity()));
         searchResult.setBrands(brandVos);
-        //分类属性
+
+        List<SearchResult.NavVo> navVos = new ArrayList<>();
+        // 面包屑导航
+        if (searchParam.getAttrs() != null && !searchParam.getAttrs().isEmpty()) {
+            searchParam.getAttrs().forEach(attr -> {
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+                String[] s = attr.split("_");
+                navVo.setNavValue(s[1]);
+                searchResult.getAttrIds().add(Long.valueOf(s[0]));
+                SearchResult.AttrVo attrVo = attrMap.get(Long.valueOf(s[0]));
+                navVo.setNavName(attrVo != null ? attrVo.getAttrName() : s[0]);
+                String replace = replaceQueryString(searchParam, attr, "attrs");
+                navVo.setLink("http://search.guli.com/list.html" + replace);
+                navVos.add(navVo);
+            });
+        }
+        List<Long> brandId = searchParam.getBrandId();
+        if (brandId != null && !brandId.isEmpty()) {
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+            for (Long aLong : brandId) {
+                SearchResult.BrandVo brandVo = brandVoMap.get(aLong);
+                navVo.setNavName("品牌");
+                navVo.setNavValue(brandVo.getBrandName());
+                String replace = replaceQueryString(searchParam, String.valueOf(brandVo.getBrandId()), "brandId");
+                navVo.setLink("http://search.guli.com/list.html" + replace);
+                navVos.add(0,navVo);
+            }
+        }
+
+        searchResult.setNavs(navVos);
+        // 分类属性
         List<SearchResult.CategoryVo> catelogVos = new ArrayList<>();
         ParsedLongTerms category_agg = search.getAggregations().get("category_agg");
         List<? extends Terms.Bucket> buckets = category_agg.getBuckets();
@@ -148,7 +180,32 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
         searchResult.setCategory(catelogVos);
         return searchResult;
+    }
 
+    /**
+     * @param searchParam 包含查询字符串的 SearchParam 对象
+     * @param value       要编码的值
+     * @param key         要替换或移除的键
+     * @return 替换或移除后的查询字符串
+     */
+    private String replaceQueryString(SearchParam searchParam, String value, String key) {
+        String encode = null;
+        try {
+            // 将值进行编码，将加号替换成 %20
+            encode = URLEncoder.encode(value, "UTF-8").replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        // 如果查询字符串已经包含了问号（？），则说明该字符串已经包含了一个查询参数
+        String queryString = searchParam.get_queryString();
+        if (queryString.contains("?" + key + "=" + encode)) {
+            boolean contains = queryString.contains("&");
+            // 将指定键值对替换为空字符串
+            return queryString.replace( contains ? "?" + key + "=" + encode + "&" : "?" + key + "=" + encode, contains ? "?":"");
+        } else {
+            // 否则，将指定键值对替换成一个“&”符号
+            return queryString.replace("&" + key + "=" + encode, "");
+        }
     }
 
     /**
@@ -192,6 +249,7 @@ public class MallSearchServiceImpl implements MallSearchService {
         if (searchParam.getHasStock() != null) {
             boolQueryBuilder.filter(QueryBuilders.termQuery("hasStock", searchParam.getHasStock() == 1));
         }
+        //1.5 查询价格区间
         if (searchParam.getSkuPrice() != null) {
             //价格 1_500/_500/500_
             RangeQueryBuilder skuPrice = QueryBuilders.rangeQuery("skuPrice");
@@ -200,10 +258,10 @@ public class MallSearchServiceImpl implements MallSearchService {
                 skuPrice.gte(s[0]).lte(s[1]);
             } else if (s.length == 1) {
                 if (searchParam.getSkuPrice().startsWith("_")) {
-                    skuPrice.lte(s[0]);
+                    skuPrice.gte(s[0]);
                 }
                 if (searchParam.getSkuPrice().endsWith("_")) {
-                    skuPrice.gte(s[0]);
+                    skuPrice.lte(s[0]);
                 }
             }
 

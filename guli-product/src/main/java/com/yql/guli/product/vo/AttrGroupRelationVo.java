@@ -23,5 +23,4 @@ public class AttrGroupRelationVo {
          **/
         private Long attrGroupId;
 
-
 }

@@ -15,12 +15,15 @@ import com.yql.guli.product.dto.AttrGroupDTO;
 import com.yql.guli.product.entity.AttrAttrgroupRelationEntity;
 import com.yql.guli.product.entity.AttrEntity;
 import com.yql.guli.product.entity.AttrGroupEntity;
+import com.yql.guli.product.entity.ProductAttrValueEntity;
 import com.yql.guli.product.service.AttrGroupService;
+import com.yql.guli.product.service.ProductAttrValueService;
 import com.yql.guli.product.vo.AttrGroupBaseVo;
 import com.yql.guli.product.vo.AttrGroupRelationVo;
+import com.yql.guli.product.vo.SpuItemAttrGroupVo;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,18 +37,14 @@ import java.util.stream.Collectors;
  * @since 1.0.0 2023-04-18
  */
 @Service
+@AllArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGroupEntity, AttrGroupDTO> implements AttrGroupService {
 
     private final AttrDao attrDao;
     private final AttrAttrgroupRelationDao attrAttrgroupRelationDao;
     private final AttrGroupDao attrGroupDao;
-    @Autowired
-    public AttrGroupServiceImpl(AttrDao attrDao, AttrAttrgroupRelationDao attrAttrgroupRelationDao,AttrGroupDao attrGroupDao) {
-        this.attrDao = attrDao;
-        this.attrAttrgroupRelationDao = attrAttrgroupRelationDao;
-        this.attrGroupDao = attrGroupDao;
-    }
+    private ProductAttrValueService productAttrValueService;
 
     @Override
     public QueryWrapper<AttrGroupEntity> getWrapper(Map<String, Object> params) {
@@ -59,10 +58,11 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
 
     /**
      * 查询关键
-     * @author yql
-     * @date 19:54 2023/5/3
+     *
      * @param params catelogId
      * @return com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<com.yql.guli.product.entity.AttrGroupEntity>
+     * @author yql
+     * @date 19:54 2023/5/3
      **/
     public LambdaQueryWrapper<AttrGroupEntity> getWrapper(Map<String, Object> params, Long catelogId) {
         String key = (String) params.get("key");
@@ -142,15 +142,15 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
      **/
     @Override
     public Optional<PageUtils<AttrEntity>> getNoAttrRelation(Map<String, Object> map, Long id) {
-       //判断
+        //判断
         if (id == 0 || map.isEmpty()) {
             return Optional.empty();
         }
         //当前分组只能关联自己所属分类里面的所有属性
         String key = (String) map.get("key");
         LambdaQueryWrapper<AttrEntity> queryWrapper = new LambdaQueryWrapper<>();
-        if (key != null){
-            queryWrapper.eq(AttrEntity::getAttrId,key).or().like(AttrEntity::getAttrName,key);
+        if (key != null) {
+            queryWrapper.eq(AttrEntity::getAttrId, key).or().like(AttrEntity::getAttrName, key);
         }
         AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(id);
         Long catelogId = attrGroupEntity.getCatelogId();
@@ -162,7 +162,7 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
         List<Long> attrIds = attrAttrgroupRelationDao.selectList(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>()
                 .in(AttrAttrgroupRelationEntity::getAttrGroupId, attrGroupIds)).stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
         //获取未关联的属性
-        if(!attrIds.isEmpty()){
+        if (!attrIds.isEmpty()) {
             queryWrapper.eq(AttrEntity::getCatelogId, catelogId);
         }
         List<AttrEntity> attrEntities = attrDao.selectList(queryWrapper.eq(AttrEntity::getAttrType, ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode()).notIn(AttrEntity::getAttrId, attrIds));
@@ -193,5 +193,51 @@ public class AttrGroupServiceImpl extends CrudServiceImpl<AttrGroupDao, AttrGrou
             attrGroupBaseVo.setAttrs(attrEntities);
             return attrGroupBaseVo;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取Spu属性分组对应的规格参数
+     *
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrBySpuId(Long spuId) {
+        //查询规格参数组
+        List<AttrGroupEntity> attrGroupEntities = baseMapper.selectList(new LambdaQueryWrapper<AttrGroupEntity>().select(AttrGroupEntity::getAttrGroupName, AttrGroupEntity::getAttrGroupId));
+        // 查询与指定SPU相关的属性ID
+        List<Long> attrIds = attrAttrgroupRelationDao.selectList(new LambdaQueryWrapper<AttrAttrgroupRelationEntity>()
+                        .select(AttrAttrgroupRelationEntity::getAttrId)
+                        .in(AttrAttrgroupRelationEntity::getAttrGroupId, attrGroupEntities.stream().map(AttrGroupEntity::getAttrGroupId).collect(Collectors.toList())))
+                .stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
+        // 查询与指定SPU相关的属性值和名称
+        List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.getBaseMapper()
+                .selectList(new LambdaQueryWrapper<ProductAttrValueEntity>()
+                        .select(ProductAttrValueEntity::getAttrId, ProductAttrValueEntity::getAttrName, ProductAttrValueEntity::getAttrValue)
+                        .eq(ProductAttrValueEntity::getSpuId, spuId)
+                        .in(ProductAttrValueEntity::getAttrId, attrIds));
+        // 将属性值和名称与属性组相关联
+        Map<Long, List<SpuItemAttrGroupVo.SpuBaseAttrVo>> attrMap = new HashMap<>();
+        for (AttrGroupEntity attrGroupEntity : attrGroupEntities) {
+            for (ProductAttrValueEntity productAttrValueEntity : productAttrValueEntities) {
+                Long attrGroupId = attrGroupEntity.getAttrGroupId();
+                SpuItemAttrGroupVo.SpuBaseAttrVo spuBaseAttrVo = new SpuItemAttrGroupVo.SpuBaseAttrVo();
+                spuBaseAttrVo.setAttrName(productAttrValueEntity.getAttrName());
+                spuBaseAttrVo.setAttrValue(productAttrValueEntity.getAttrValue());
+                if (!attrMap.containsKey(attrGroupId)) {
+                    attrMap.put(attrGroupId, new ArrayList<>());
+                }
+                attrMap.get(attrGroupId).add(spuBaseAttrVo);
+            }
+        }
+        // 构建属性组和属性值的关联关系
+        List<SpuItemAttrGroupVo> spuItemAttrGroupVos = new ArrayList<>();
+        for (AttrGroupEntity attrGroupEntity : attrGroupEntities) {
+            SpuItemAttrGroupVo spuItemAttrGroupVo = new SpuItemAttrGroupVo();
+            spuItemAttrGroupVo.setGroupName(attrGroupEntity.getAttrGroupName());
+            spuItemAttrGroupVo.setAttrs(attrMap.get(attrGroupEntity.getAttrGroupId()));
+            spuItemAttrGroupVos.add(spuItemAttrGroupVo);
+        }
+        return spuItemAttrGroupVos;
     }
 }

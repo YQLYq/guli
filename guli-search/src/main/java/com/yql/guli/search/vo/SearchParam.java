@@ -72,4 +72,12 @@ public class SearchParam {
      * @return 
      **/
     private Integer pageNum;
+    /**
+     * 原生查询条件
+     * @author yql
+     * @date 10:48 2023/5/30
+     * @param
+     * @return
+     **/
+    private String _queryString;
 }

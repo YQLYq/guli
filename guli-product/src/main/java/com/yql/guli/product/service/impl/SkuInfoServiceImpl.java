@@ -6,16 +6,30 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yql.guli.common.page.PageUtils;
 import com.yql.guli.common.service.impl.CrudServiceImpl;
 import com.yql.guli.common.utils.PageUtil;
+import com.yql.guli.common.utils.Result;
+import com.yql.guli.product.dao.SkuImagesDao;
 import com.yql.guli.product.dao.SkuInfoDao;
 import com.yql.guli.product.dto.SkuInfoDTO;
+import com.yql.guli.product.entity.SkuImagesEntity;
 import com.yql.guli.product.entity.SkuInfoEntity;
+import com.yql.guli.product.entity.SpuInfoDescEntity;
+import com.yql.guli.product.service.AttrGroupService;
 import com.yql.guli.product.service.SkuInfoService;
+import com.yql.guli.product.service.SkuSaleAttrValueService;
+import com.yql.guli.product.service.SpuInfoDescService;
+import com.yql.guli.product.vo.SkuItemSaleAttrVo;
+import com.yql.guli.product.vo.SkuItemVo;
+import com.yql.guli.product.vo.SpuItemAttrGroupVo;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * sku信息
@@ -25,8 +39,14 @@ import java.util.Map;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@AllArgsConstructor
 public class SkuInfoServiceImpl extends CrudServiceImpl<SkuInfoDao, SkuInfoEntity, SkuInfoDTO> implements SkuInfoService {
 
+    private SpuInfoDescService spuInfoDescService;
+    private SkuImagesDao skuImagesDao;
+    private SkuSaleAttrValueService skuSaleAttrValueService;
+    private AttrGroupService attrGroupService;
+    private ThreadPoolExecutor executor;
     @Override
     public QueryWrapper<SkuInfoEntity> getWrapper(Map<String, Object> params){
         String id = (String)params.get("id");
@@ -79,5 +99,53 @@ public class SkuInfoServiceImpl extends CrudServiceImpl<SkuInfoDao, SkuInfoEntit
     public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
         LambdaQueryWrapper<SkuInfoEntity> skuInfoEntityLambdaQueryWrapper = new LambdaQueryWrapper<>();
         return this.baseMapper.selectList(skuInfoEntityLambdaQueryWrapper.eq(SkuInfoEntity::getSpuId, spuId));
+    }
+
+    /**
+     * @param skuId 商品skuId
+     * @return 返回商品的全部信息
+     */
+    @Override
+    public Result<SkuItemVo> getProductDetailsInformation(Long skuId) {
+        SkuItemVo skuItemVo = new SkuItemVo();
+        //获取sku的基本信息
+        CompletableFuture<SkuInfoEntity> skuInfoEntityCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            SkuInfoEntity skuInfo = this.getById(skuId);
+            skuItemVo.setSkuInfoEntityList(skuInfo);
+            return skuInfo;
+        }, executor);
+        //获取spu的规格参数
+        CompletableFuture<Void> attrGroupVosThenAcceptAsync = skuInfoEntityCompletableFuture.thenAcceptAsync((skuInfo -> {
+            List<SpuItemAttrGroupVo> baseGetListForSpu = attrGroupService.getAttrGroupWithAttrBySpuId(skuInfo.getSpuId());
+            skuItemVo.setAttrGroupVos(baseGetListForSpu);
+        }), executor);
+        //获取Sku的图片
+        CompletableFuture<Void> skuImagesEntitiesThenAcceptAsync = skuInfoEntityCompletableFuture.thenAcceptAsync((skuInfo -> {
+            List<SkuImagesEntity> skuImagesEntities = skuImagesDao.selectList(new LambdaQueryWrapper<SkuImagesEntity>()
+                    .eq(SkuImagesEntity::getSkuId, skuInfo.getSkuId()));
+            skuItemVo.setSkuImagesEntities(skuImagesEntities);
+        }), executor);
+        //获取spu的介绍
+        CompletableFuture<Void> spuInfoDescEntityThenAcceptAsync = skuInfoEntityCompletableFuture.thenAcceptAsync((skuInfo) -> {
+            SpuInfoDescEntity spuInfoDescEntity = spuInfoDescService.getById(skuInfo.getSpuId());
+            skuItemVo.setSpuInfoDescEntity(spuInfoDescEntity);
+        }, executor);
+        //获取Spu的销售属性
+        CompletableFuture<Void> skuSaleAttrValueEntitiesThenAcceptAsync = skuInfoEntityCompletableFuture.thenAcceptAsync(skuInfo -> {
+            List<SkuItemSaleAttrVo> skuSaleAttrValueEntities = skuSaleAttrValueService.getSpuSaleWithAttrBySpuId(skuInfo.getSpuId());
+            skuItemVo.setSkuSaleAttrValueEntity(skuSaleAttrValueEntities);
+        });
+        try {
+            CompletableFuture
+                    .allOf(skuInfoEntityCompletableFuture,attrGroupVosThenAcceptAsync
+                            ,skuSaleAttrValueEntitiesThenAcceptAsync,spuInfoDescEntityThenAcceptAsync
+                            ,skuImagesEntitiesThenAcceptAsync).get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Result<SkuItemVo>().put(skuItemVo);
     }
 }
